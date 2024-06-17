@@ -1,0 +1,22 @@
+package views
+
+templ Index() {
+	<html>
+		@Head()
+		<body>
+			<h1 class="bg-red-600 font-bold text-4xl">todo</h1>
+			<span>oooo </span>
+			@Scripts()
+		</body>
+	</html>
+}
+
+templ Head() {
+	<head>
+		<link rel="stylesheet" href="/static/style.css"/>
+	</head>
+}
+
+templ Scripts() {
+	<script src="/static/htmx.min.js"></script>
+}
