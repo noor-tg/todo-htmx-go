@@ -1,8 +1,8 @@
 live/templ:
-	templ generate
+	templ generate -v
 
 live/styles:
-	tailwind -i assets/style.css -o static/style.css
+	tailwind --no-autoprefixer -i assets/style.css -o static/style.css
 
 live/server:
 	go build -o tmp/main main.go
