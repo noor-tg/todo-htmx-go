@@ -4,7 +4,6 @@ import (
 	"alnoor/todo-go-htmx"
 	"database/sql"
 	"log"
-	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -31,13 +30,12 @@ func (s *SqliteStore) Open() error {
 }
 
 func (s *SqliteStore) Migrate() error {
-	queries, err := os.ReadFile("../db/sqlite/migrate/up.sql")
-	if err != nil {
-		log.Fatalf("could not migrate: %v", err)
-		return err
-	}
-
-	prepared, err := s.DB.Prepare(string(queries))
+	prepared, err := s.DB.Prepare(`
+		CREATE TABLE IF NOT EXISTS tasks (
+			id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    		description text 
+		)
+	`)
 	if err != nil {
 		log.Fatalf("could not migrate: %v", err)
 		return err
@@ -52,21 +50,21 @@ func (s *SqliteStore) Migrate() error {
 	return nil
 }
 
-func (s *SqliteStore) InsertTask(task todo.Task) (todo.Task, error) {
+func (s *SqliteStore) InsertTask(description string) (todo.Task, error) {
 	out := todo.Task{}
 
 	prepared, err := s.DB.Prepare(`
 		INSERT INTO tasks (description) VALUES (?)
 	`)
 	if err != nil {
-		log.Fatalf("could not migrate: %v", err)
+		log.Fatalf("could not insert task: %v", err)
 		return out, err
 	}
 
-	result, err := prepared.Exec(task.Description)
+	result, err := prepared.Exec(description)
 	id, err := result.LastInsertId()
 	if err != nil {
-		log.Fatalf("could not migrate: %v", err)
+		log.Fatalf("could not insert task: %v", err)
 		return out, err
 	}
 
@@ -80,4 +78,25 @@ func (s *SqliteStore) InsertTask(task todo.Task) (todo.Task, error) {
 	}
 
 	return out, nil
+}
+
+func (s *SqliteStore) GetTasks() ([]todo.Task, error) {
+	rows, err := s.DB.Query(`SELECT * FROM tasks`)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tasks []todo.Task
+
+	for rows.Next() {
+		task := todo.Task{}
+		if err = rows.Scan(&task.Id, &task.Description); err != nil {
+			return nil, err
+		}
+		tasks = append(tasks, task)
+	}
+
+	return tasks, nil
 }

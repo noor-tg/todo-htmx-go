@@ -3,11 +3,9 @@ package views
 templ Head() {
 	<head>
 		<link rel="stylesheet" href="/static/style.css"/>
+		<meta charset="utf8"/>
+		<script src="/static/htmx.min.js"></script>
 	</head>
-}
-
-templ Scripts() {
-	<script src="/static/htmx.min.js"></script>
 }
 
 templ Layout() {
@@ -17,7 +15,6 @@ templ Layout() {
 			<div class="w-1/2 mx-auto mt-20">
 				{ children... }
 			</div>
-			@Scripts()
 		</body>
 	</html>
 }

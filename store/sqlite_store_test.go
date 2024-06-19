@@ -17,7 +17,6 @@ func TestSqliteStore(t *testing.T) {
 	})
 
 	t.Run("migrate db", func(t *testing.T) {
-
 		err := store.Migrate()
 		if err != nil {
 			t.Errorf("migration test failed: %v", err)
@@ -25,21 +24,38 @@ func TestSqliteStore(t *testing.T) {
 	})
 
 	t.Run("insert task", func(t *testing.T) {
-
 		input := todo.Task{
 			Description: "مهمة 10",
 		}
-		task, err := store.InsertTask(input)
+
+		task, err := store.InsertTask(input.Description)
 		if err != nil {
 			t.Errorf("failed insert test: %v", err)
 		}
+
 		if input.Description != task.Description {
 			t.Errorf("failed insert test: wanted %v got %v", input.Description, task.Description)
 		}
+
 		if task.Id == 0 {
 			t.Errorf("failed insert test: got id %v", task.Id)
 		}
+	})
 
+	t.Run("get all tasks", func(t *testing.T) {
+		input := todo.Task{
+			Description: "مهمة 10",
+		}
+
+		tasks, err := store.GetTasks()
+		if err != nil {
+			t.Errorf("failed to get tasks: %v", err)
+		}
+
+		if tasks[len(tasks)-1].Description != input.Description {
+			t.Errorf("failed to get tasks: %v", err)
+
+		}
 	})
 
 }

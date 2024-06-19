@@ -1,28 +1,28 @@
 package views
 
-templ Index() {
+import "alnoor/todo-go-htmx"
+
+templ Index(tasks []todo.Task) {
 	@Layout() {
 		<h1
 			class="bg-sky-600 text-white font-bold
 						 text-4xl leading-normal p-2 rounded"
 		>مهام</h1>
 		<ul id="list">
-			@Task("مهمة 1")
-			@Task("مهمة 2")
-			@Task("مهمة 3")
-			@Task("مهمة 4")
-			@Task("مهمة 5")
+			for _, task := range tasks {
+				@Task(task.Description)
+			}
 		</ul>
 		<form
-			hx-trigger="click[enterKey]"
 			hx-post="/tasks"
-			hx-target="#list beforeend"
-			class="mx-1 mt-4"
+			hx-target="#list"
+			hx-swap="beforeend"
+			hx-on--after-request="this.reset()"
 		>
 			<input
 				name="description"
 				placeholder="مهمة جديدة"
-				class="w-full ring-4 ring-slate-400 
+				class="mx-1 mt-4 w-full ring-4 ring-slate-400 
 							 p-2 rounded focus:outline-none 
 							 focus:ring-slate-600"
 			/>
