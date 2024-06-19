@@ -14,6 +14,7 @@ templ Index(tasks []todo.Task) {
 			}
 		</ul>
 		<form
+			class="mx-1"
 			hx-post="/tasks"
 			hx-target="#list"
 			hx-swap="beforeend"
@@ -22,7 +23,7 @@ templ Index(tasks []todo.Task) {
 			<input
 				name="description"
 				placeholder="مهمة جديدة"
-				class="mx-1 mt-4 w-full ring-4 ring-slate-400 
+				class="mt-4 w-full ring-4 ring-slate-400 
 							 p-2 rounded focus:outline-none 
 							 focus:ring-slate-600"
 			/>
