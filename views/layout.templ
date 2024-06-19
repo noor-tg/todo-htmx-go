@@ -1,0 +1,23 @@
+package views
+
+templ Head() {
+	<head>
+		<link rel="stylesheet" href="/static/style.css"/>
+	</head>
+}
+
+templ Scripts() {
+	<script src="/static/htmx.min.js"></script>
+}
+
+templ Layout() {
+	<html>
+		@Head()
+		<body>
+			<div class="w-1/2 mx-auto mt-20">
+				{ children... }
+			</div>
+			@Scripts()
+		</body>
+	</html>
+}

@@ -1,22 +1,16 @@
 package views
 
 templ Index() {
-	<html>
-		@Head()
-		<body>
-			<h1 class="bg-red-600 font-bold text-4xl">todo</h1>
-			<span>oooo </span>
-			@Scripts()
-		</body>
-	</html>
-}
-
-templ Head() {
-	<head>
-		<link rel="stylesheet" href="/static/style.css"/>
-	</head>
-}
-
-templ Scripts() {
-	<script src="/static/htmx.min.js"></script>
+	@Layout() {
+		<h1 class="bg-red-600 font-bold text-4xl">مهام</h1>
+		<ul>
+			<li>مهمة 1</li>
+			<li>مهمة 2</li>
+			<li>مهمة 3</li>
+			<li>مهمة 4</li>
+		</ul>
+		<form>
+			<textarea placeholder="مهمة جديدة" class="mt-4 w-full h-30 ring-4 ring-slate-400 p-2 rounded"></textarea>
+		</form>
+	}
 }
