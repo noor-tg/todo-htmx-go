@@ -57,5 +57,25 @@ func TestSqliteStore(t *testing.T) {
 
 		}
 	})
+	t.Run("update task", func(t *testing.T) {
+		input := todo.Task{
+			Description: "مهمة 10",
+		}
+
+		task, err := store.InsertTask(input.Description)
+		if err != nil {
+			t.Errorf("failed update test: %v", err)
+		}
+
+		description := "updated task"
+		updatedTask, err := store.UpdateTask(task.Id, description)
+		if description != updatedTask.Description {
+			t.Errorf("failed update test: wanted %v got %v", description, task.Description)
+		}
+
+		if task.Id != updatedTask.Id {
+			t.Errorf("failed update test: got id %v", task.Id)
+		}
+	})
 
 }

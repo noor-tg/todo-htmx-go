@@ -100,3 +100,37 @@ func (s *SqliteStore) GetTasks() ([]todo.Task, error) {
 
 	return tasks, nil
 }
+
+func (s *SqliteStore) UpdateTask(id int, description string) (todo.Task, error) {
+	out := todo.Task{}
+
+	single := s.DB.QueryRow("SELECT id, description FROM tasks WHERE id = ?", id)
+
+	existing := todo.Task{}
+
+	err := single.Scan(&existing.Id, &existing.Description)
+	if err != nil {
+		log.Fatalf("%v\n", err)
+	}
+
+	prepared, err := s.DB.Prepare(`
+		UPDATE tasks 
+		SET description = ?
+		WHERE id = ? 
+	`)
+	if err != nil {
+		log.Fatalf("could not update task: %v", err)
+		return out, err
+	}
+
+	_, err = prepared.Exec(description, id)
+
+	if err != nil {
+		log.Fatalf("could not insert task: %v", err)
+		return out, err
+	}
+
+	out = todo.Task{Id: id, Description: description}
+
+	return out, nil
+}
