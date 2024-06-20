@@ -1,0 +1,14 @@
+package views
+
+import "alnoor/todo-go-htmx"
+import "fmt"
+
+templ Task(task todo.Task) {
+	<li
+		class="bg-slate-100 my-2 p-2 rounded cursor-pointer"
+		data-task-id={ fmt.Sprint(task.Id) }
+		hx-trigger="click"
+		hx-get={ fmt.Sprintf("/tasks/%d", task.Id) }
+		hx-swap="outerHTML"
+	>{ task.Description }</li>
+}

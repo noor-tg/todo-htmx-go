@@ -1,6 +1,3 @@
 #!/bin/bash
 
-wc -l $(fd -e go -E "**/*_test.go")
-wc -l $(fd -e templ)
-wc -l $(fd -e css)
-
+wc -l $(fd  "(go|css|templ)$" -E "**/*_test.go")

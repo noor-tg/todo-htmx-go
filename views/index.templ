@@ -18,16 +18,6 @@ templ Index(tasks []todo.Task) {
 	}
 }
 
-templ Task(task todo.Task) {
-	<li
-		class="bg-slate-100 my-2 p-2 rounded cursor-pointer"
-		data-task-id={ fmt.Sprint(task.Id) }
-		hx-trigger="click"
-		hx-get={ fmt.Sprintf("/tasks/%d", task.Id) }
-		hx-swap="outerHTML"
-	>{ task.Description }</li>
-}
-
 templ UpdateForm(task todo.Task) {
 	<input
 		hx-put={ fmt.Sprintf("/tasks/%d", task.Id) }
@@ -37,25 +27,6 @@ templ UpdateForm(task todo.Task) {
 		data-test-id={ fmt.Sprint(task.Id) }
 		value={ task.Description }
 		placeholder="مهمة جديدة"
-		class="w-full ring-4 ring-slate-400 
-							 p-3 rounded-lg focus:outline-none 
-							 focus:ring-slate-600
-							ring-inset my-2
-							"
-	/>
-}
-
-templ InputForm(OOB bool) {
-	<input
-		id="new-task"
-		hx-post="/tasks"
-		hx-target="#list"
-		hx-swap="beforeend"
-		name="description"
-		placeholder="مهمة جديدة"
-		if OOB {
-			hx-swap-oob="true"
-		}
 		class="w-full ring-4 ring-slate-400 
 							 p-3 rounded-lg focus:outline-none 
 							 focus:ring-slate-600

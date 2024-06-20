@@ -1,0 +1,20 @@
+package views
+
+templ InputForm(OOB bool) {
+	<input
+		id="new-task"
+		hx-post="/tasks"
+		hx-target="#list"
+		hx-swap="beforeend"
+		name="description"
+		placeholder="مهمة جديدة"
+		class="w-full ring-4 ring-slate-400 
+							 p-3 rounded-lg focus:outline-none 
+							 focus:ring-slate-600
+							ring-inset my-2
+							"
+		if OOB {
+			hx-swap-oob="true"
+		}
+	/>
+}
