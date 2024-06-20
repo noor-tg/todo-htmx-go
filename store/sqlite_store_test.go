@@ -78,4 +78,23 @@ func TestSqliteStore(t *testing.T) {
 		}
 	})
 
+	t.Run("get single task", func(t *testing.T) {
+		input := todo.Task{
+			Description: "مهمة 10",
+		}
+
+		task, err := store.InsertTask(input.Description)
+		if err != nil {
+			t.Errorf("failed insert test: %v", err)
+		}
+		existing, err := store.GetTaskById(task.Id)
+
+		if err != nil {
+			t.Errorf("failed insert test: %v", err)
+		}
+		if existing.Description != task.Description {
+			t.Errorf("failed insert test: wanted %v got %v", existing.Description, task.Description)
+		}
+	})
+
 }
