@@ -33,3 +33,20 @@ body {
     url(/static/fonts/NotoKufiArabic-Bold.woff) format("woff"),
     url(/static/fonts/NotoKufiArabic-Bold.ttf) format("truetype");
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-slate-50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-400;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-600;
+}
