@@ -1,36 +1,65 @@
 package views
 
 import "alnoor/todo-go-htmx"
+import "fmt"
 
 templ Index(tasks []todo.Task) {
 	@Layout() {
 		<h1
 			class="bg-sky-600 text-white font-bold
-						 text-4xl leading-normal p-2 rounded"
+						 text-4xl leading-normal p-2 rounded mb-2"
 		>مهام</h1>
-		<ul id="list">
+		<ul class="h-4/6 overflow-y-scroll pl-2" id="list">
 			for _, task := range tasks {
-				@Task(task.Description)
+				@Task(task)
 			}
 		</ul>
-		<form
-			class="mx-1"
-			hx-post="/tasks"
-			hx-target="#list"
-			hx-swap="beforeend"
-			hx-on--after-request="this.reset()"
-		>
-			<input
-				name="description"
-				placeholder="مهمة جديدة"
-				class="mt-4 w-full ring-4 ring-slate-400 
-							 p-2 rounded focus:outline-none 
-							 focus:ring-slate-600"
-			/>
-		</form>
+		@InputForm(false)
 	}
 }
 
-templ Task(description string) {
-	<li class="bg-slate-100 my-2 p-2 rounded">{ description }</li>
+templ Task(task todo.Task) {
+	<li
+		class="bg-slate-100 my-2 p-2 rounded cursor-pointer"
+		data-task-id={ fmt.Sprint(task.Id) }
+		hx-trigger="click"
+		hx-get={ fmt.Sprintf("/tasks/%d", task.Id) }
+		hx-swap="outerHTML"
+	>{ task.Description }</li>
+}
+
+templ UpdateForm(task todo.Task) {
+	<input
+		hx-put={ fmt.Sprintf("/tasks/%d", task.Id) }
+		ht-trigger="click[enterKey]"
+		hx-swap="outerHTML"
+		name="description"
+		data-test-id={ fmt.Sprint(task.Id) }
+		value={ task.Description }
+		placeholder="مهمة جديدة"
+		class="w-full ring-4 ring-slate-400 
+							 p-3 rounded-lg focus:outline-none 
+							 focus:ring-slate-600
+							ring-inset my-2
+							"
+	/>
+}
+
+templ InputForm(OOB bool) {
+	<input
+		id="new-task"
+		hx-post="/tasks"
+		hx-target="#list"
+		hx-swap="beforeend"
+		name="description"
+		placeholder="مهمة جديدة"
+		if OOB {
+			hx-swap-oob="true"
+		}
+		class="w-full ring-4 ring-slate-400 
+							 p-3 rounded-lg focus:outline-none 
+							 focus:ring-slate-600
+							ring-inset my-2
+							"
+	/>
 }

@@ -5,6 +5,7 @@ import (
 	"alnoor/todo-go-htmx/views"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -31,30 +32,36 @@ func NewTasksServer() Server {
 
 	r.Get("/", server.IndexHandler)
 	r.Post("/tasks", server.PostTaskHandler)
+	r.Get("/tasks/{id:[0-9]+}", server.GetTaskFormHandler)
+	r.Put("/tasks/{id:[0-9]+}", server.UpdateTaskHandler)
+
 	server.Router = r
 
 	return server
-
 }
 
 func (s *Server) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	tasks, err := s.Store.GetTasks()
 	if err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
 	}
 
 	views.Index(tasks).Render(r.Context(), w)
 }
+
 func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Fatalf("%v\n", err)
+		return
 	}
 	description := r.Form.Get("description")
 
 	if description == "" {
 		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
 	}
 
 	task, err := s.Store.InsertTask(description)
@@ -62,7 +69,68 @@ func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		log.Fatalf("%v\n", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+
+	views.Task(task).Render(r.Context(), w)
+	views.InputForm(true).Render(r.Context(), w)
+}
+
+func (s *Server) GetTaskFormHandler(w http.ResponseWriter, r *http.Request) {
+	id_param := chi.URLParam(r, "id")
+
+	id, err := strconv.Atoi(id_param)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatalf("%v\n", err)
+		return
+	}
+
+	task, err := s.Store.GetTaskById(id)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatalf("%v\n", err)
+		return
+	}
+
+	views.UpdateForm(task).Render(r.Context(), w)
+}
+
+func (s *Server) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		log.Fatalf("%v\n", err)
+		return
+	}
+
+	task, err := s.Store.GetTaskById(id)
+
+	err = r.ParseForm()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Fatalf("%v\n", err)
+		return
+	}
+	description := r.Form.Get("description")
+
+	if description == "" {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		return
+	}
+
+	task, err = s.Store.UpdateTask(id, description)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		log.Fatalf("%v\n", err)
+		return
 	}
 	w.WriteHeader(http.StatusCreated)
-	views.Task(task.Description).Render(r.Context(), w)
+	views.Task(task).Render(r.Context(), w)
 }
