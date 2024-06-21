@@ -128,13 +128,13 @@ func PutTask(task todo.Task, serve server.Server) (todo.Task, error, *httptest.R
 }
 
 func GetTaskId(response *httptest.ResponseRecorder) int {
-	pattern := regexp.MustCompile(`task-id="(\d+)"`)
+	pattern := regexp.MustCompile(`hx-(put|post|get|delete)="/tasks/(\d+)"`)
 
 	body := response.Body.String()
 
 	matches := pattern.FindStringSubmatch(body)
 	if len(matches) > 0 {
-		id_num, _ := strconv.Atoi(matches[1])
+		id_num, _ := strconv.Atoi(matches[2])
 		return id_num
 	}
 

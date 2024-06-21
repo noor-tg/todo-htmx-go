@@ -44,6 +44,7 @@ func (s *Server) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	tasks, err := s.Store.GetTasks()
 	if err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
+		views.ServerError().Render(r.Context(), w)
 		return
 	}
 
@@ -54,21 +55,23 @@ func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatalf("%v\n", err)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
 		return
 	}
-	description := r.Form.Get("description")
 
+	description := r.Form.Get("description")
 	if description == "" {
 		w.WriteHeader(http.StatusUnprocessableEntity)
+		views.ServerError().Render(r.Context(), w)
 		return
 	}
 
 	task, err := s.Store.InsertTask(description)
-
 	if err != nil {
+		log.Printf("%v\n", err)
 		w.WriteHeader(http.StatusBadRequest)
-		log.Fatalf("%v\n", err)
+		views.ServerError().Render(r.Context(), w)
 		return
 	}
 
@@ -79,21 +82,19 @@ func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) GetTaskFormHandler(w http.ResponseWriter, r *http.Request) {
-	id_param := chi.URLParam(r, "id")
-
-	id, err := strconv.Atoi(id_param)
-
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Fatalf("%v\n", err)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
 		return
 	}
 
 	task, err := s.Store.GetTaskById(id)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Fatalf("%v\n", err)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
 		return
 	}
 
@@ -102,35 +103,44 @@ func (s *Server) GetTaskFormHandler(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
-
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		log.Fatalf("%v\n", err)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
 		return
 	}
 
 	task, err := s.Store.GetTaskById(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
+		return
+	}
 
 	err = r.ParseForm()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatalf("%v\n", err)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
 		return
 	}
-	description := r.Form.Get("description")
 
+	description := r.Form.Get("description")
 	if description == "" {
 		w.WriteHeader(http.StatusUnprocessableEntity)
+		views.NotFound().Render(r.Context(), w)
 		return
 	}
 
 	task, err = s.Store.UpdateTask(id, description)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Fatalf("%v\n", err)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
 		return
 	}
-	w.WriteHeader(http.StatusCreated)
+
+	w.WriteHeader(http.StatusOK)
 	views.Task(task).Render(r.Context(), w)
 }

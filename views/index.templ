@@ -1,7 +1,6 @@
 package views
 
 import "alnoor/todo-go-htmx"
-import "fmt"
 
 templ Index(tasks []todo.Task) {
 	@Layout() {
@@ -16,21 +15,4 @@ templ Index(tasks []todo.Task) {
 		</ul>
 		@InputForm(false)
 	}
-}
-
-templ UpdateForm(task todo.Task) {
-	<input
-		hx-put={ fmt.Sprintf("/tasks/%d", task.Id) }
-		ht-trigger="click[enterKey]"
-		hx-swap="outerHTML"
-		name="description"
-		data-test-id={ fmt.Sprint(task.Id) }
-		value={ task.Description }
-		placeholder="مهمة جديدة"
-		class="w-full ring-4 ring-slate-400 
-							 p-3 rounded-lg focus:outline-none 
-							 focus:ring-slate-600
-							ring-inset my-2
-							"
-	/>
 }

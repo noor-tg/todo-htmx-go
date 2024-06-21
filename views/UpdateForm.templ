@@ -1,0 +1,19 @@
+package views
+
+import "alnoor/todo-go-htmx"
+import "fmt"
+
+templ UpdateForm(task todo.Task) {
+	<input
+		hx-put={ fmt.Sprintf("/tasks/%d", task.Id) }
+		name="description"
+		hx-swap="innerHTML"
+		hx-target="closest div"
+		value={ task.Description }
+		placeholder="مهمة جديدة"
+		class="w-full ring-4 ring-slate-400 
+					 p-3 rounded-lg focus:outline-none 
+					 focus:ring-slate-600
+					 ring-inset my-2"
+	/>
+}

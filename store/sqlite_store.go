@@ -125,9 +125,9 @@ func (s *SqliteStore) UpdateTask(id int, description string) (todo.Task, error) 
 		return out, err
 	}
 
-	out = todo.Task{Id: id, Description: description}
+	task := todo.Task{Id: id, Description: description}
 
-	return out, nil
+	return task, nil
 }
 
 func (s *SqliteStore) GetTaskById(id int) (todo.Task, error) {

@@ -4,11 +4,21 @@ import "alnoor/todo-go-htmx"
 import "fmt"
 
 templ Task(task todo.Task) {
-	<li
-		class="bg-slate-100 my-2 p-2 rounded cursor-pointer"
-		data-task-id={ fmt.Sprint(task.Id) }
-		hx-trigger="click"
-		hx-get={ fmt.Sprintf("/tasks/%d", task.Id) }
-		hx-swap="outerHTML"
-	>{ task.Description }</li>
+	<div class="rounded-lg my-2 bg-slate-100 flex flex-row items-center justify-between px-2 py-1">
+		<li
+			class="cursor-pointer px-1 py-2 min-w-fit w-1/2"
+			hx-trigger="click"
+			hx-get={ fmt.Sprintf("/tasks/%d", task.Id) }
+			hx-swap="outerHTML"
+		>{ task.Description }</li>
+		<button
+			type="button"
+			class="mx-2 text-red-300 leading-none text-sm ring-inset ring-2 ring-red-300 font-bold size-6 rounded-full"
+			hx-delete={ fmt.Sprintf("/tasks/%d", task.Id) }
+			hx-swap="outerHTML"
+			title="حذف"
+		>
+			x
+		</button>
+	</div>
 }
