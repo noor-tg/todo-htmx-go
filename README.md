@@ -2,14 +2,14 @@
 
 
 ## dependances
-- [htmx](htmx.org) (already installed in static directory)
-- [tailwindcss](tailwindcss.com)
-- [templ](templ.guide)
+- [htmx](https://htmx.org) (already installed in static directory)
+- [tailwindcss](https://tailwindcss.com)
+- [templ](https://templ.guide)
 - go
 
 ## install
 - go dependances
-```sh
+```bash
 go mod tidy
 ```
 
@@ -18,14 +18,14 @@ go mod tidy
   - add to path
 
 - install air
-```sh
+```bash
 go install github.com/cosmtrek/air@latest
 ```
 
 - install `make`
 
-## dev
-```
+## run
+```bash
 air
 ```
 
