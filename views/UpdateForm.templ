@@ -7,7 +7,7 @@ templ UpdateForm(task todo.Task) {
 	<input
 		hx-put={ fmt.Sprintf("/tasks/%d", task.Id) }
 		name="description"
-		hx-swap="innerHTML"
+		hx-swap="outerHTML"
 		hx-target="closest div"
 		value={ task.Description }
 		placeholder="مهمة جديدة"

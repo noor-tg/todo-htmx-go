@@ -55,15 +55,26 @@ func TestTasksServer(t *testing.T) {
 
 	t.Run("submit put request to /tasks/id with description return task element", func(t *testing.T) {
 		task, err, response := PostNewTask(serve)
-		task, err, response = PutTask(task, serve)
+		task, response, err = PutTask(task, serve)
 
-		AssertResponseCode(response, http.StatusCreated, t)
+		AssertResponseCode(response, http.StatusOK, t)
 
 		if err != nil {
 			t.Errorf("error in post task: %v", err)
 		}
 
 		AssertResponseContain(response, task.Description, t)
+	})
+
+	t.Run("submit delete request to /tasks/id should delete task", func(t *testing.T) {
+		task, err, response := PostNewTask(serve)
+		response, err = DeleteTask(task, serve)
+
+		AssertResponseCode(response, http.StatusOK, t)
+
+		if err != nil {
+			t.Errorf("error in post task: %v", err)
+		}
 	})
 }
 
@@ -111,7 +122,7 @@ func PostNewTask(serve server.Server) (todo.Task, error, *httptest.ResponseRecor
 	return task, err, response
 }
 
-func PutTask(task todo.Task, serve server.Server) (todo.Task, error, *httptest.ResponseRecorder) {
+func PutTask(task todo.Task, serve server.Server) (todo.Task, *httptest.ResponseRecorder, error) {
 	input := strings.NewReader(fmt.Sprintf("description=%s", task.Description))
 	request, err := http.NewRequest(http.MethodPut, fmt.Sprintf("/tasks/%d", task.Id), input)
 
@@ -124,7 +135,22 @@ func PutTask(task todo.Task, serve server.Server) (todo.Task, error, *httptest.R
 
 	task.Id = GetTaskId(response)
 
-	return task, err, response
+	return task, response, err
+}
+
+func DeleteTask(task todo.Task, serve server.Server) (*httptest.ResponseRecorder, error) {
+	request, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("/tasks/%d", task.Id), nil)
+
+	// NOTE: setting the header is required
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	response := httptest.NewRecorder()
+
+	serve.Router.ServeHTTP(response, request)
+
+	task.Id = GetTaskId(response)
+
+	return response, err
 }
 
 func GetTaskId(response *httptest.ResponseRecorder) int {
@@ -140,6 +166,7 @@ func GetTaskId(response *httptest.ResponseRecorder) int {
 
 	return 0
 }
+
 func GetUpdateTaskForm(task todo.Task, serve server.Server) (*httptest.ResponseRecorder, error) {
 	request, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/tasks/%d", task.Id), nil)
 	response := httptest.NewRecorder()

@@ -37,13 +37,13 @@ func (s *SqliteStore) Migrate() error {
 		)
 	`)
 	if err != nil {
-		log.Fatalf("could not migrate: %v", err)
+		log.Printf("could not migrate: %v", err)
 		return err
 	}
 
 	_, err = prepared.Exec()
 	if err != nil {
-		log.Fatalf("could not migrate: %v", err)
+		log.Printf("could not migrate: %v", err)
 		return err
 	}
 
@@ -57,14 +57,14 @@ func (s *SqliteStore) InsertTask(description string) (todo.Task, error) {
 		INSERT INTO tasks (description) VALUES (?)
 	`)
 	if err != nil {
-		log.Fatalf("could not insert task: %v", err)
+		log.Printf("could not insert task: %v", err)
 		return out, err
 	}
 
 	result, err := prepared.Exec(description)
 	id, err := result.LastInsertId()
 	if err != nil {
-		log.Fatalf("could not insert task: %v", err)
+		log.Printf("could not insert task: %v", err)
 		return out, err
 	}
 
@@ -104,7 +104,7 @@ func (s *SqliteStore) GetTasks() ([]todo.Task, error) {
 func (s *SqliteStore) UpdateTask(id int, description string) (todo.Task, error) {
 	out, err := s.GetTaskById(id)
 	if err != nil {
-		log.Fatalf("could not update task: %v", err)
+		log.Printf("could not update task: %v", err)
 		return out, err
 	}
 
@@ -114,14 +114,14 @@ func (s *SqliteStore) UpdateTask(id int, description string) (todo.Task, error) 
 		WHERE id = ? 
 	`)
 	if err != nil {
-		log.Fatalf("could not update task: %v", err)
+		log.Printf("could not update task: %v", err)
 		return out, err
 	}
 
 	_, err = prepared.Exec(description, id)
 
 	if err != nil {
-		log.Fatalf("could not insert task: %v", err)
+		log.Printf("could not insert task: %v", err)
 		return out, err
 	}
 
@@ -138,8 +138,34 @@ func (s *SqliteStore) GetTaskById(id int) (todo.Task, error) {
 	err := single.Scan(&existing.Id, &existing.Description)
 
 	if err != nil {
-		log.Fatalf("%v\n", err)
+		log.Printf("%v\n", err)
 		return *existing, err
 	}
 	return *existing, nil
+}
+
+func (s *SqliteStore) DeleteTask(id int) error {
+	_, err := s.GetTaskById(id)
+	if err != nil {
+		log.Printf("could not update task: %v", err)
+		return err
+	}
+
+	prepared, err := s.DB.Prepare(`
+		DELETE FROM tasks 
+		WHERE id = ? 
+	`)
+	if err != nil {
+		log.Printf("could not update task: %v", err)
+		return err
+	}
+
+	_, err = prepared.Exec(id)
+
+	if err != nil {
+		log.Printf("could not insert task: %v", err)
+		return err
+	}
+
+	return nil
 }

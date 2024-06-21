@@ -97,4 +97,24 @@ func TestSqliteStore(t *testing.T) {
 		}
 	})
 
+	t.Run("delete task", func(t *testing.T) {
+		input := todo.Task{
+			Description: "مهمة 10",
+		}
+
+		task, err := store.InsertTask(input.Description)
+		if err != nil {
+			t.Errorf("failed update test: %v", err)
+		}
+
+		err = store.DeleteTask(task.Id)
+		if err != nil {
+			t.Errorf("failed update test: %v", err)
+		}
+		_, err = store.GetTaskById(task.Id)
+		if err == nil {
+			t.Errorf("failed update test: get task by id method should return error")
+		}
+	})
+
 }

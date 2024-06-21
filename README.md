@@ -30,3 +30,9 @@ air
 ```
 
 
+## NOTES:
+- hx-delete accept StatusOk to delete hx-target element
+- do not use htmx put, delete requests with proxy without cors setup
+- you may write the name of attributes wrong (i.e ht-post)
+- it is better to use oob than js code with hx events
+ 
