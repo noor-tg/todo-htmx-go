@@ -3,3 +3,4 @@ views/*_templ.go
 static/style.css
 **/*.db
 htmx.js
+coverage.out
