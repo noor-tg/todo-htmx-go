@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1] - 2024-06-24
+
+### 🚀 Features
+
+- *(db)* Add toggle status related methods to store
+- *(ux)* Tasks status
+
+### 📚 Documentation
+
+- Add CHANGELOG
+
+### 🧪 Testing
+
+- *(server)* Extract test utils funcs to file. update toggle status test
+- *(db,server)* Generate fake descriptions. test fetch index with status
+
+### ⚙️ Miscellaneous Tasks
+
+- Remove verbose output from templ generate
+- Ignore code coverage file
+
 ## [1.0] - 2024-06-21
 
 ### 🚀 Features
