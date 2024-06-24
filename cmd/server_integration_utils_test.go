@@ -4,16 +4,20 @@ import (
 	"alnoor/todo-go-htmx"
 	"alnoor/todo-go-htmx/server"
 	"fmt"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"regexp"
 	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/a-h/templ"
+	"github.com/pioz/faker"
 )
 
-func GetTasksList(serve server.Server) (error, *httptest.ResponseRecorder) {
-	request, err := http.NewRequest(http.MethodGet, "/", nil)
+func GetTasksList(serve server.Server, querystring string) (error, *httptest.ResponseRecorder) {
+	request, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/%s", querystring), nil)
 
 	response := httptest.NewRecorder()
 
@@ -23,8 +27,22 @@ func GetTasksList(serve server.Server) (error, *httptest.ResponseRecorder) {
 
 func AssertResponseContain(response *httptest.ResponseRecorder, wanted string, t testing.TB) {
 	t.Helper()
+	if !strings.Contains(response.Body.String(), templ.EscapeString(wanted)) {
+		t.Errorf("got %v wanted %v", response.Body.String(), templ.EscapeString(wanted))
+	}
+}
+
+func AssertResponseContainProp(response *httptest.ResponseRecorder, wanted string, t testing.TB) {
+	t.Helper()
 	if !strings.Contains(response.Body.String(), wanted) {
 		t.Errorf("got %v wanted %v", response.Body.String(), wanted)
+	}
+}
+
+func AssertResponseNotContain(response *httptest.ResponseRecorder, wanted string, t testing.TB) {
+	t.Helper()
+	if strings.Contains(response.Body.String(), templ.EscapeString(wanted)) {
+		t.Errorf("got %v wanted %v", response.Body.String(), templ.EscapeString(wanted))
 	}
 }
 
@@ -38,7 +56,7 @@ func AssertResponseCode(response *httptest.ResponseRecorder, wanted int, t testi
 
 func PostNewTask(serve server.Server) (todo.Task, error, *httptest.ResponseRecorder) {
 	task := todo.Task{
-		Description: "هذه مهمة من فحص",
+		Description: faker.FullName(),
 	}
 	input := strings.NewReader(fmt.Sprintf("description=%s", task.Description))
 
@@ -52,6 +70,10 @@ func PostNewTask(serve server.Server) (todo.Task, error, *httptest.ResponseRecor
 	serve.Router.ServeHTTP(response, request)
 
 	task.Id = GetTaskId(response)
+
+	if err != nil {
+		log.Println(err)
+	}
 
 	return task, err, response
 }

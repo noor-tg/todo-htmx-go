@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/a-h/templ"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -75,7 +76,7 @@ func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	description := r.Form.Get("description")
+	description := templ.EscapeString(r.Form.Get("description"))
 	if description == "" {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		views.ServerError().Render(r.Context(), w)
@@ -133,7 +134,7 @@ func (s *Server) UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	description := r.Form.Get("description")
+	description := templ.EscapeString(r.Form.Get("description"))
 	if description == "" {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		views.NotFound().Render(r.Context(), w)
