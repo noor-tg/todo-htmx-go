@@ -1,6 +1,7 @@
 package server
 
 import (
+	"alnoor/todo-go-htmx"
 	"alnoor/todo-go-htmx/store"
 	"alnoor/todo-go-htmx/views"
 	"fmt"
@@ -34,6 +35,7 @@ func NewTasksServer() Server {
 	r.Get("/", server.IndexHandler)
 	r.Post("/tasks", server.PostTaskHandler)
 	r.Get("/tasks/{id:[0-9]+}", server.GetTaskFormHandler)
+	r.Put("/tasks/toggle-status/{id:[0-9]+}", server.ToggleStatusOfTaskHandler)
 	r.Put("/tasks/{id:[0-9]+}", server.UpdateTaskHandler)
 	r.Delete("/tasks/{id:[0-9]+}", server.DeleteTaskHandler)
 
@@ -43,14 +45,25 @@ func NewTasksServer() Server {
 }
 
 func (s *Server) IndexHandler(w http.ResponseWriter, r *http.Request) {
-	tasks, err := s.Store.GetTasks()
+	activeStatus := r.URL.Query().Get("status")
+	if activeStatus == "" {
+		activeStatus = "الكل"
+	}
+	var tasks []todo.Task
+	var err error
+
+	if activeStatus == "الكل" {
+		tasks, err = s.Store.GetTasks()
+	} else {
+		tasks, err = s.Store.GetTasksByStatus(activeStatus)
+	}
 	if err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		views.ServerError().Render(r.Context(), w)
 		return
 	}
 
-	views.Index(tasks).Render(r.Context(), w)
+	views.Index(activeStatus, tasks).Render(r.Context(), w)
 }
 
 func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
@@ -157,4 +170,24 @@ func (s *Server) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "")
+}
+func (s *Server) ToggleStatusOfTaskHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
+		return
+	}
+
+	task, err := s.Store.ToggleTaskStatus(id)
+	fmt.Println(task)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
+		return
+	}
+
+	views.Task(task).Render(r.Context(), w)
 }

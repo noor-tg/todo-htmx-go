@@ -1,18 +1,47 @@
 package views
 
 import "alnoor/todo-go-htmx"
+import "fmt"
 
-templ Index(tasks []todo.Task) {
+templ Index(activeStatus string, tasks []todo.Task) {
 	@Layout() {
-		<h1
-			class="bg-sky-600 text-white font-bold
-						 text-4xl leading-normal p-2 rounded mb-2"
-		>مهام</h1>
-		<ul class="h-4/6 overflow-y-scroll pl-2" id="list">
-			for _, task := range tasks {
-				@Task(task)
-			}
-		</ul>
+		<div
+			class="bg-sky-600 rounded mb-2 
+						flex flex-row justify-between text-white items-center p-2"
+		>
+			<h1 class="font-bold text-4xl leading-normal">مهام</h1>
+			<nav class="mx-2 inline-flex flex-row" hx-boost="true">
+				@StatusLink("الكل", activeStatus, "rounded-s-full pr-3")
+				@StatusLink("مكتمل", activeStatus, "")
+				@StatusLink("مجدول", activeStatus, "rounded-e-full pl-3")
+			</nav>
+		</div>
+		@Tasks(tasks)
 		@InputForm(false)
 	}
+}
+
+templ Tasks(tasks []todo.Task) {
+	<ul class="h-4/6 overflow-y-auto pl-2" id="list">
+		for _, task := range tasks {
+			@Task(task)
+		}
+	</ul>
+}
+
+func linkBG(status, active string) string {
+	if status == active {
+		return "bg-sky-500"
+	} else {
+		return "bg-sky-400"
+	}
+}
+
+templ StatusLink(status, activeStatus, className string) {
+	<a
+		class={ "p-2 hover:bg-sky-500 active:bg-sky-700", className, linkBG(status, activeStatus) }
+		href={ templ.URL(fmt.Sprintf("/?status=%s", status)) }
+	>
+		{ status }
+	</a>
 }
