@@ -109,11 +109,59 @@ func TestSqliteStore(t *testing.T) {
 
 		err = store.DeleteTask(task.Id)
 		if err != nil {
-			t.Errorf("failed update test: %v", err)
+			t.Errorf("failed delete test: %v", err)
 		}
 		_, err = store.GetTaskById(task.Id)
 		if err == nil {
+			t.Errorf("failed delete test: get task by id method should return error")
+		}
+	})
+
+	t.Run("toggle task status", func(t *testing.T) {
+		input := todo.Task{
+			Description: "مهمة 10",
+		}
+
+		task, err := store.InsertTask(input.Description)
+		if err != nil {
+			t.Errorf("failed update test: %v", err)
+		}
+
+		toggled, err := store.ToggleTaskStatus(task.Id)
+		if err != nil {
 			t.Errorf("failed update test: get task by id method should return error")
+		}
+
+		if toggled.Status != "مكتمل" {
+			t.Errorf("failed toggle test: status is not toggled")
+		}
+	})
+	t.Run("get tasks by status", func(t *testing.T) {
+		input := todo.Task{
+			Description: "مهمة 10",
+		}
+
+		task, err := store.InsertTask(input.Description)
+		if err != nil {
+			t.Errorf("failed update test: %v", err)
+		}
+
+		_, err = store.ToggleTaskStatus(task.Id)
+		if err != nil {
+			t.Errorf("failed update test: get task by id method should return error")
+		}
+
+		tasks, err := store.GetTasksByStatus("مكتمل")
+		if err != nil {
+			t.Errorf("failed to get tasks: %v", err)
+		}
+
+		if tasks[len(tasks)-1].Description != input.Description {
+			t.Errorf("failed to get tasks: %v", err)
+
+		}
+		if tasks[len(tasks)-1].Status != "مكتمل" {
+			t.Errorf("failed toggle test: status is not toggled")
 		}
 	})
 

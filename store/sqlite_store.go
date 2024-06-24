@@ -33,7 +33,8 @@ func (s *SqliteStore) Migrate() error {
 	prepared, err := s.DB.Prepare(`
 		CREATE TABLE IF NOT EXISTS tasks (
 			id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    		description text 
+    		description text,
+    		status TEXT CHECK(status IN ('مكتمل', 'مجدول')) NOT NULL DEFAULT 'مجدول'
 		)
 	`)
 	if err != nil {
@@ -68,12 +69,9 @@ func (s *SqliteStore) InsertTask(description string) (todo.Task, error) {
 		return out, err
 	}
 
-	rows, err := s.DB.Query(`SELECT * FROM tasks WHERE id = ?`, id)
-
-	defer rows.Close()
-	rows.Next()
-
-	if err = rows.Scan(&out.Id, &out.Description); err != nil {
+	out, err = s.GetTaskById(int(id))
+	if err != nil {
+		log.Printf("could not insert task: %v", err)
 		return out, err
 	}
 
@@ -92,7 +90,7 @@ func (s *SqliteStore) GetTasks() ([]todo.Task, error) {
 
 	for rows.Next() {
 		task := todo.Task{}
-		if err = rows.Scan(&task.Id, &task.Description); err != nil {
+		if err = rows.Scan(&task.Id, &task.Description, &task.Status); err != nil {
 			return nil, err
 		}
 		tasks = append(tasks, task)
@@ -125,17 +123,22 @@ func (s *SqliteStore) UpdateTask(id int, description string) (todo.Task, error) 
 		return out, err
 	}
 
-	task := todo.Task{Id: id, Description: description}
+	task, err := s.GetTaskById(id)
+
+	if err != nil {
+		log.Printf("could not insert task: %v", err)
+		return out, err
+	}
 
 	return task, nil
 }
 
 func (s *SqliteStore) GetTaskById(id int) (todo.Task, error) {
-	single := s.DB.QueryRow("SELECT id, description FROM tasks WHERE id = ?", id)
+	single := s.DB.QueryRow("SELECT id, description, status FROM tasks WHERE id = ?", id)
 
 	existing := &todo.Task{}
 
-	err := single.Scan(&existing.Id, &existing.Description)
+	err := single.Scan(&existing.Id, &existing.Description, &existing.Status)
 
 	if err != nil {
 		log.Printf("%v\n", err)
@@ -168,4 +171,66 @@ func (s *SqliteStore) DeleteTask(id int) error {
 	}
 
 	return nil
+}
+
+func (s *SqliteStore) ToggleTaskStatus(id int) (todo.Task, error) {
+	out, err := s.GetTaskById(id)
+	if err != nil {
+		log.Printf("could not update task: %v", err)
+		return todo.Task{}, err
+	}
+
+	var status string
+	if out.Status == "مكتمل" {
+		status = "مجدول"
+	} else {
+		status = "مكتمل"
+	}
+
+	prepared, err := s.DB.Prepare(`
+		UPDATE tasks 
+		SET status = ?
+		WHERE id = ? 
+	`)
+	if err != nil {
+		log.Printf("could not update task: %v", err)
+		return todo.Task{}, err
+	}
+
+	_, err = prepared.Exec(status, id)
+
+	if err != nil {
+		log.Printf("could not insert task: %v", err)
+		return todo.Task{}, err
+	}
+
+	task, err := s.GetTaskById(id)
+
+	if err != nil {
+		log.Printf("could not insert task: %v", err)
+		return todo.Task{}, err
+	}
+
+	return task, nil
+}
+
+func (s *SqliteStore) GetTasksByStatus(status string) ([]todo.Task, error) {
+	rows, err := s.DB.Query(`SELECT * FROM tasks WHERE status = ?`, status)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var tasks []todo.Task
+
+	for rows.Next() {
+		task := todo.Task{}
+		if err = rows.Scan(&task.Id, &task.Description, &task.Status); err != nil {
+			return nil, err
+		}
+		tasks = append(tasks, task)
+	}
+
+	return tasks, nil
 }
