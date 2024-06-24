@@ -1,5 +1,5 @@
 live/templ:
-	templ generate -v
+	templ generate
 
 live/styles:
 	tailwind --no-autoprefixer -i assets/style.css -o static/style.css
