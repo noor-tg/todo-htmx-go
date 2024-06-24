@@ -47,24 +47,50 @@ func NewTasksServer() Server {
 
 func (s *Server) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	activeStatus := r.URL.Query().Get("status")
-	if activeStatus == "" {
-		activeStatus = "الكل"
-	}
+	description := r.URL.Query().Get("description")
 	var tasks []todo.Task
 	var err error
 
-	if activeStatus == "الكل" {
-		tasks, err = s.Store.GetTasks()
-	} else {
-		tasks, err = s.Store.GetTasksByStatus(activeStatus)
+	// not status, empty search
+	if len(activeStatus) == 0 && len(description) == 0 {
+		tasks, err = s.Store.GetTasks(nil)
 	}
+	// status, search
+	if len(activeStatus) > 0 && len(description) > 0 {
+		tasks, err = s.Store.GetTasks(map[string]string{
+			"description": description,
+			"status":      activeStatus,
+		})
+	}
+	// not status, search
+	if len(activeStatus) == 0 && len(description) > 0 {
+		tasks, err = s.Store.GetTasks(map[string]string{
+			"description": description,
+		})
+	}
+	// status, no search
+	if len(activeStatus) > 0 && len(description) == 0 {
+		tasks, err = s.Store.GetTasks(map[string]string{
+			"status": activeStatus,
+		})
+	}
+
 	if err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)
 		views.ServerError().Render(r.Context(), w)
 		return
 	}
 
-	views.Index(activeStatus, tasks).Render(r.Context(), w)
+	if target, ok := r.Header["Hx-Target"]; ok {
+		if target[0] == "list" {
+			views.Tasks(tasks).Render(r.Context(), w)
+		} else {
+			views.Index(activeStatus, tasks).Render(r.Context(), w)
+		}
+	} else {
+		views.Index(activeStatus, tasks).Render(r.Context(), w)
+	}
+
 }
 
 func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {

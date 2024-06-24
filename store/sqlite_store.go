@@ -3,7 +3,9 @@ package store
 import (
 	"alnoor/todo-go-htmx"
 	"database/sql"
+	"fmt"
 	"log"
+	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -78,8 +80,20 @@ func (s *SqliteStore) InsertTask(description string) (todo.Task, error) {
 	return out, nil
 }
 
-func (s *SqliteStore) GetTasks() ([]todo.Task, error) {
-	rows, err := s.DB.Query(`SELECT * FROM tasks`)
+func (s *SqliteStore) GetTasks(filters map[string]string) ([]todo.Task, error) {
+	query := `SELECT * FROM tasks`
+	var queryArgs []interface{}
+
+	if filters != nil {
+		query, queryArgs = FilterBy(
+			filters, query, queryArgs, "status", "=",
+		)
+		query, queryArgs = FilterBy(
+			filters, query, queryArgs, "description", "LIKE",
+		)
+	}
+
+	rows, err := s.DB.Query(query, queryArgs...)
 
 	if err != nil {
 		return nil, err
@@ -89,14 +103,39 @@ func (s *SqliteStore) GetTasks() ([]todo.Task, error) {
 	var tasks []todo.Task
 
 	for rows.Next() {
-		task := todo.Task{}
+		task := &todo.Task{}
 		if err = rows.Scan(&task.Id, &task.Description, &task.Status); err != nil {
 			return nil, err
 		}
-		tasks = append(tasks, task)
+		tasks = append(tasks, *task)
 	}
 
 	return tasks, nil
+}
+
+func FilterBy(filters map[string]string, query string, queryArgs []interface{}, key string, operator string) (string, []interface{}) {
+	filter, filterExists := filters[key]
+	if filterExists {
+		if !ContainWhere(query) {
+			query += " WHERE"
+		} else {
+			query += " OR"
+		}
+		if operator == "LIKE" {
+			queryArgs = append(queryArgs, fmt.Sprintf("%%%s%%", filter))
+		} else {
+			queryArgs = append(queryArgs, filter)
+		}
+		query += fmt.Sprintf(" %s %s ?", key, operator)
+	}
+	return query, queryArgs
+}
+
+func ContainWhere(query string) bool {
+	if strings.Contains(query, "WHERE") {
+		return true
+	}
+	return false
 }
 
 func (s *SqliteStore) UpdateTask(id int, description string) (todo.Task, error) {

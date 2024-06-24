@@ -10,6 +10,16 @@ templ Index(activeStatus string, tasks []todo.Task) {
 						flex flex-row justify-between text-white items-center p-2"
 		>
 			<h1 class="font-bold text-4xl leading-normal">مهام</h1>
+			<input
+				class="p-2 rounded-lg text-slate-900"
+				name="description"
+				type="search"
+				hx-get="/"
+				hx-trigger="input changed delay:10ms, description"
+				placeholder="بحث"
+				hx-target="#list"
+				hx-swap="outerHTML"
+			/>
 			<nav class="mx-2 inline-flex flex-row" hx-boost="true">
 				@StatusLink("الكل", activeStatus, "rounded-s-full pr-3")
 				@StatusLink("مكتمل", activeStatus, "")
@@ -40,7 +50,11 @@ func linkBG(status, active string) string {
 templ StatusLink(status, activeStatus, className string) {
 	<a
 		class={ "p-2 hover:bg-sky-500 active:bg-sky-700", className, linkBG(status, activeStatus) }
-		href={ templ.URL(fmt.Sprintf("/?status=%s", status)) }
+		if status == "الكل" {
+			href="/"
+		} else {
+			href={ templ.URL(fmt.Sprintf("/?status=%s", status)) }
+		}
 	>
 		{ status }
 	</a>

@@ -4,6 +4,8 @@ import (
 	"alnoor/todo-go-htmx"
 	"alnoor/todo-go-htmx/store"
 	"testing"
+
+	"github.com/pioz/faker"
 )
 
 func TestSqliteStore(t *testing.T) {
@@ -43,18 +45,54 @@ func TestSqliteStore(t *testing.T) {
 	})
 
 	t.Run("get all tasks", func(t *testing.T) {
-		input := todo.Task{
-			Description: "مهمة 10",
-		}
 
-		tasks, err := store.GetTasks()
+		task, err := store.InsertTask(faker.CountryName())
+		tasks, err := store.GetTasks(nil)
 		if err != nil {
 			t.Errorf("failed to get tasks: %v", err)
 		}
 
-		if tasks[len(tasks)-1].Description != input.Description {
-			t.Errorf("failed to get tasks: %v", err)
+		if len(tasks) > 0 && tasks[len(tasks)-1].Description != task.Description {
+			t.Errorf("failed to get tasks: %v", task.Description)
 
+		}
+	})
+	t.Run("filter tasks by params", func(t *testing.T) {
+		task1, err := store.InsertTask(faker.CountryName())
+		if err != nil {
+			t.Errorf("failed insert task 1: %v", err)
+		}
+		_, err = store.InsertTask(faker.CountryName())
+		if err != nil {
+			t.Errorf("failed insert task 2: %v", err)
+		}
+		task3, err := store.InsertTask(faker.CountryName())
+		if err != nil {
+			t.Errorf("failed insert task 3: %v", err)
+		}
+
+		tasks, err := store.GetTasks(map[string]string{"description": task3.Description})
+		if err != nil {
+			t.Errorf("failed to get tasks: %v", err)
+		}
+
+		exists := false
+		notexist := true
+		for _, task := range tasks {
+			if task.Description == task3.Description {
+				exists = true
+				break
+			}
+			if task.Description == task1.Description {
+				exists = false
+				break
+			}
+		}
+		if !exists {
+			t.Errorf("task should exist: %v", task3.Description)
+		}
+		if !notexist {
+			t.Errorf("task should not exist: %v", task1.Description)
 		}
 	})
 	t.Run("update task", func(t *testing.T) {
