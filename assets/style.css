@@ -1,5 +1,10 @@
 @tailwind base;
 @tailwind components;
+
+.scrollbar-gutter {
+  scrollbar-gutter: stable;
+}
+
 @tailwind utilities;
 
 body {
@@ -40,13 +45,16 @@ body {
 
 ::-webkit-scrollbar-track {
   @apply bg-slate-50;
+  border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
   @apply bg-slate-400;
   border-radius: 6px;
 }
-
+::-webkit-scrollbar-button {
+  display: none;
+}
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-slate-600;
 }
