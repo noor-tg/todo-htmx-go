@@ -48,8 +48,13 @@ func NewTasksServer() Server {
 func (s *Server) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	activeStatus := r.URL.Query().Get("status")
 	description := r.URL.Query().Get("description")
+
 	var tasks []todo.Task
 	var err error
+
+	if activeStatus == "الكل" {
+		activeStatus = ""
+	}
 
 	// not status, empty search
 	if len(activeStatus) == 0 && len(description) == 0 {

@@ -7,5 +7,5 @@ import (
 
 func main() {
 	serve := server.NewTasksServer()
-	http.ListenAndServe("localhost:3000", serve.Router)
+	http.ListenAndServe(":3000", serve.Router)
 }

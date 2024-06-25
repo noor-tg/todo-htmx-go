@@ -93,6 +93,7 @@ func (s *SqliteStore) GetTasks(filters map[string]string) ([]todo.Task, error) {
 		)
 	}
 
+	fmt.Println(query)
 	rows, err := s.DB.Query(query, queryArgs...)
 
 	if err != nil {
@@ -119,7 +120,7 @@ func FilterBy(filters map[string]string, query string, queryArgs []interface{}, 
 		if !ContainWhere(query) {
 			query += " WHERE"
 		} else {
-			query += " OR"
+			query += " AND"
 		}
 		if operator == "LIKE" {
 			queryArgs = append(queryArgs, fmt.Sprintf("%%%s%%", filter))

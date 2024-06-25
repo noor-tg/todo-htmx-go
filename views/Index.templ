@@ -1,38 +1,38 @@
 package views
 
 import "alnoor/todo-go-htmx"
-import "fmt"
 
 templ Index(activeStatus string, tasks []todo.Task) {
 	@Layout() {
-		<div
+		<form
 			class="bg-sky-600 rounded mb-2 
 						flex flex-row justify-between text-white items-center p-2"
+			hx-target="#list"
+			hx-swap="outerHTML"
+			hx-trigger="input"
+			hx-get="/"
+			hx-push-url="true"
 		>
 			<h1 class="font-bold text-4xl leading-normal">مهام</h1>
 			<input
-				class="p-2 rounded-lg text-slate-900"
+				class="p-2 rounded-lg text-slate-900 w-1/2"
 				name="description"
 				type="search"
-				hx-get="/"
-				hx-trigger="input changed delay:10ms, description"
 				placeholder="بحث"
-				hx-target="#list"
-				hx-swap="outerHTML"
 			/>
-			<nav class="mx-2 inline-flex flex-row" hx-boost="true">
+			<div class="mx-2 inline-flex flex-row">
 				@StatusLink("الكل", activeStatus, "rounded-s-full pr-3")
 				@StatusLink("مكتمل", activeStatus, "")
 				@StatusLink("مجدول", activeStatus, "rounded-e-full pl-3")
-			</nav>
-		</div>
+			</div>
+		</form>
 		@Tasks(tasks)
 		@InputForm(false)
 	}
 }
 
 templ Tasks(tasks []todo.Task) {
-	<ul class="h-4/6 overflow-y-auto pl-2" id="list">
+	<ul class="h-4/5 overflow-y-auto pl-2" id="list">
 		for _, task := range tasks {
 			@Task(task)
 		}
@@ -48,14 +48,15 @@ func linkBG(status, active string) string {
 }
 
 templ StatusLink(status, activeStatus, className string) {
-	<a
+	<label
 		class={ "p-2 hover:bg-sky-500 active:bg-sky-700", className, linkBG(status, activeStatus) }
-		if status == "الكل" {
-			href="/"
-		} else {
-			href={ templ.URL(fmt.Sprintf("/?status=%s", status)) }
-		}
 	>
+		<input
+			name="status"
+			type="radio"
+			value={ status }
+			class="hidden"
+		/>
 		{ status }
-	</a>
+	</label>
 }

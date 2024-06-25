@@ -4,6 +4,7 @@ templ Head() {
 	<head>
 		<link rel="stylesheet" href="/static/style.css"/>
 		<meta charset="utf8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<script src="/static/htmx.min.js"></script>
 	</head>
 }
@@ -12,7 +13,7 @@ templ Layout() {
 	<html>
 		@Head()
 		<body class="text-slate-800">
-			<div class="w-1/2 mx-auto mt-10">
+			<div class="lg:w-1/2 md:w-11/12 md:mx-auto mx-6 md:mt-10 mt-4">
 				{ children... }
 			</div>
 		</body>
