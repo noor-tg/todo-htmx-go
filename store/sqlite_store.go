@@ -5,22 +5,25 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
-
-type Store interface {
-	Open() error
-	Close() error
-}
 
 type SqliteStore struct {
 	Path string
 	DB   *sql.DB
 }
 
-func (s *SqliteStore) Open() error {
+func New(path string) SqliteStore {
+	return SqliteStore{Path: path}
+}
+
+func (s *SqliteStore) Open(cleanup bool) error {
+	if cleanup {
+		os.Remove(s.Path)
+	}
 	db, err := sql.Open("sqlite3", s.Path)
 	if err != nil {
 		log.Fatalf("could not connect to sqlite db: %v", err)

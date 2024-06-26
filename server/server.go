@@ -19,10 +19,10 @@ type Server struct {
 	Router *chi.Mux
 }
 
-func NewTasksServer() Server {
-	store := store.SqliteStore{Path: "./todo.db"}
+func NewTasksServer(cleanup bool) Server {
+	store := store.New("./todo.db")
 	server := Server{}
-	store.Open()
+	store.Open(cleanup)
 	store.Migrate()
 	server.Store = store
 

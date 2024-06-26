@@ -9,9 +9,9 @@ import (
 )
 
 func TestSqliteStore(t *testing.T) {
-	store := store.SqliteStore{Path: "./todo.db"}
+	store := store.New("./todo.db")
 	t.Run("connect correctly to db", func(t *testing.T) {
-		err := store.Open()
+		err := store.Open(true)
 
 		if err != nil {
 			t.Errorf("error in test connect: %v", err)
