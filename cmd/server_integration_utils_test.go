@@ -56,7 +56,7 @@ func AssertResponseCode(response *httptest.ResponseRecorder, wanted int, t testi
 
 func PostNewTask(serve server.Server) (todo.Task, error, *httptest.ResponseRecorder) {
 	task := todo.Task{
-		Description: faker.FullName(),
+		Description: faker.ColorName(),
 	}
 	input := strings.NewReader(fmt.Sprintf("description=%s", task.Description))
 

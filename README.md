@@ -36,3 +36,24 @@ air
 - you may write the name of attributes wrong (i.e ht-post)
 - it is better to use oob than js code with hx events
  
+## Features
+- [x] add task
+- [x] list tasks
+- [x] edit task
+- [x] remove task
+- [x] toggle task status
+- [x] filter
+  - [x] by status
+  - [x] by description
+- [ ] counters
+  - [ ] total tasks
+  - [ ] completed tasks
+
+## e2e ui test with rod
+- [ ] add task
+- [ ] remove task
+- [ ] list tasks
+- [ ] filter tasks
+- [ ] edit task
+- [ ] counters
+  

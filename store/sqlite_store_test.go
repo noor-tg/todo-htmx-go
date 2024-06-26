@@ -46,27 +46,26 @@ func TestSqliteStore(t *testing.T) {
 
 	t.Run("get all tasks", func(t *testing.T) {
 
-		task, err := store.InsertTask(faker.CountryName())
+		task, err := store.InsertTask(faker.ColorName())
 		tasks, err := store.GetTasks(nil)
 		if err != nil {
 			t.Errorf("failed to get tasks: %v", err)
 		}
 
-		if len(tasks) > 0 && tasks[len(tasks)-1].Description != task.Description {
+		if len(tasks) > 0 && tasks[0].Description != task.Description {
 			t.Errorf("failed to get tasks: %v", task.Description)
-
 		}
 	})
 	t.Run("filter tasks by params", func(t *testing.T) {
-		task1, err := store.InsertTask(faker.CountryName())
+		task1, err := store.InsertTask(faker.ColorName())
 		if err != nil {
 			t.Errorf("failed insert task 1: %v", err)
 		}
-		_, err = store.InsertTask(faker.CountryName())
+		_, err = store.InsertTask(faker.ColorName())
 		if err != nil {
 			t.Errorf("failed insert task 2: %v", err)
 		}
-		task3, err := store.InsertTask(faker.CountryName())
+		task3, err := store.InsertTask(faker.ColorName())
 		if err != nil {
 			t.Errorf("failed insert task 3: %v", err)
 		}

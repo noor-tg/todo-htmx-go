@@ -94,6 +94,7 @@ func (s *SqliteStore) GetTasks(filters map[string]string) ([]todo.Task, error) {
 	}
 
 	fmt.Println(query)
+	query += " ORDER BY id DESC"
 	rows, err := s.DB.Query(query, queryArgs...)
 
 	if err != nil {
