@@ -16,7 +16,7 @@ templ Index(activeStatus string, tasks []todo.Task) {
 			<div class="text-white bg-sky-600 rounded flex flex-row justify-between items-center p-2 gap-2">
 				<h1 class="font-bold text-4xl leading-normal ml-4">مهام</h1>
 				<input
-					class="py-2 px-4 focus:outline-none focus:ring ring-inset ring-slate-300 rounded-lg text-slate-900 flex-1"
+					class="py-2 px-4 focus:outline-none focus:ring ring-inset ring-slate-300 rounded-lg text-slate-900 flex-1 hidden lg:inline-block"
 					name="description"
 					id="desktop-description"
 					type="search"
@@ -29,7 +29,7 @@ templ Index(activeStatus string, tasks []todo.Task) {
 				</div>
 			</div>
 			<input
-				class="p-4 rounded-lg text-slate-900 w-full bg-slate-50 ring-4 ring-inset ring-slate-200 focus:outline-none focus:ring-slate-300"
+				class="p-4 rounded-lg text-slate-900 w-full bg-slate-50 ring-4 ring-inset ring-slate-200 focus:outline-none focus:ring-slate-300 inline-block lg:hidden"
 				name="description"
 				id="mobile-description"
 				type="search"
@@ -50,7 +50,7 @@ templ Index(activeStatus string, tasks []todo.Task) {
 }
 
 templ Tasks(tasks []todo.Task) {
-	<ul class="h-4/6 flex flex-col gap-2 overflow-y-auto pl-2 scrollbar-gutter" id="list">
+	<ul class="h-4/6 flex flex-col gap-2 overflow-y-auto pl-1 scrollbar-gutter" id="list">
 		for _, task := range tasks {
 			@Task(task)
 		}
