@@ -13,9 +13,7 @@ func TestAddTask(t *testing.T) {
 	text := faker.ColorName()
 
 	// NOTE: no need to use type key enter event
-	wait := p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()
-
-	wait()
+	p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
 
 	g.Eq(p.MustElement("li").MustText(), text)
 }

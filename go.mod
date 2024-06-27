@@ -10,6 +10,7 @@ require (
 
 require (
 	github.com/go-rod/rod v0.116.1 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/pioz/faker v1.7.3 // indirect
 	github.com/ysmood/fetchup v0.2.3 // indirect
 	github.com/ysmood/goob v0.4.0 // indirect

@@ -1,13 +1,26 @@
 # TODO APP
 
+## Features
+- [x] add task
+- [x] list tasks
+- [x] edit task
+- [x] remove task
+- [x] toggle task status
+- [x] filter
+  - [x] by status
+  - [x] by description
+- [ ] counters
+  - [ ] total tasks
+  - [ ] completed tasks
 
-## dependances
+
+## Dependances
 - [htmx](https://htmx.org) (already installed in static directory)
 - [tailwindcss](https://tailwindcss.com)
 - [templ](https://templ.guide)
 - go
 
-## install
+## Installation
 - go dependances
 ```bash
 go mod tidy
@@ -24,7 +37,7 @@ go install github.com/cosmtrek/air@latest
 
 - install `make`
 
-## run
+## Run
 ```bash
 air
 ```
@@ -36,24 +49,11 @@ air
 - you may write the name of attributes wrong (i.e ht-post)
 - it is better to use oob than js code with hx events
  
-## Features
+## E2E Tests (with rod)
 - [x] add task
-- [x] list tasks
-- [x] edit task
 - [x] remove task
-- [x] toggle task status
-- [x] filter
-  - [x] by status
-  - [x] by description
-- [ ] counters
-  - [ ] total tasks
-  - [ ] completed tasks
-
-## e2e ui test with rod
-- [x] add task
-- [ ] remove task
-- [ ] list tasks
+- [x] edit task
+- [x] list tasks
 - [ ] filter tasks
-- [ ] edit task
 - [ ] counters
   
