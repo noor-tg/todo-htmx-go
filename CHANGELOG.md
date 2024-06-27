@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6] - 2024-06-27
+
+### 🚀 Features
+
+- *(ux)* Add project logo
+- *(ux)* Add logo and title to layout head
+- *(counters)* Add counters
+
+### 🚜 Refactor
+
+- *(config)* Extract config to types
+
+### 📚 Documentation
+
+- Add changelog. check todo item
+
+### 🧪 Testing
+
+- *(e2e)* Use got router to start server
+- *(e2e)* Add multiple test. handle dynamic db
+- *(e2e)* Add tests for toggle status and filter tasks
+
 ## [1.4] - 2024-06-27
 
 ### 🚀 Features
