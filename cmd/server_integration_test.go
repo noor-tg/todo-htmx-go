@@ -1,6 +1,7 @@
 package main_test
 
 import (
+	"alnoor/todo-go-htmx"
 	"alnoor/todo-go-htmx/server"
 	"fmt"
 	"net/http"
@@ -10,7 +11,7 @@ import (
 )
 
 func TestTasksServer(t *testing.T) {
-	serve := server.NewTasksServer(server.Config{Cleanup: true, LogHttp: false})
+	serve := server.NewTasksServer(todo.TestCfg)
 
 	t.Run("post task and return task element", func(t *testing.T) {
 		task, err, response := PostNewTask(serve)

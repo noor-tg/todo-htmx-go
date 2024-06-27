@@ -19,13 +19,8 @@ type Server struct {
 	Router *chi.Mux
 }
 
-type Config struct {
-	Cleanup bool
-	LogHttp bool
-}
-
-func NewTasksServer(config Config) Server {
-	store := store.New("./todo.db")
+func NewTasksServer(config todo.Config) Server {
+	store := store.New(config.DB)
 	server := Server{}
 	store.Open(config.Cleanup)
 	store.Migrate()
