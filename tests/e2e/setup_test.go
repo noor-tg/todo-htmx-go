@@ -2,7 +2,6 @@ package e2e_test
 
 import (
 	"alnoor/todo-go-htmx/server"
-	"net/http/httptest"
 	"testing"
 
 	"github.com/go-rod/rod"
@@ -31,20 +30,21 @@ var setup = func() func(t *testing.T) G {
 
 // a helper function to create an incognito page.
 func (g G) page(path string) *rod.Page {
-	srvr := serve()
-	page := g.browser.MustPage(srvr.URL + path)
+	router := serve(g)
+
+	page := g.browser.MustPage(router.URL(path))
 	page.MustWindowFullscreen()
 
 	g.Cleanup(func() {
 		page.MustClose()
-		srvr.Close()
 	})
 
 	return page
 }
 
-func serve() *httptest.Server {
+func serve(g G) *got.Router {
+	router := g.Serve()
 	serve := server.NewTasksServer(server.Config{Cleanup: true, LogHttp: false})
-	srvr := httptest.NewServer(serve.Router)
-	return srvr
+	router.Server.Handler = serve.Router
+	return router
 }
