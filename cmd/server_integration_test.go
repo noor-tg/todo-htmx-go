@@ -10,7 +10,7 @@ import (
 )
 
 func TestTasksServer(t *testing.T) {
-	serve := server.NewTasksServer(true)
+	serve := server.NewTasksServer(server.Config{Cleanup: true, LogHttp: false})
 
 	t.Run("post task and return task element", func(t *testing.T) {
 		task, err, response := PostNewTask(serve)

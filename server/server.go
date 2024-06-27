@@ -19,15 +19,22 @@ type Server struct {
 	Router *chi.Mux
 }
 
-func NewTasksServer(cleanup bool) Server {
+type Config struct {
+	Cleanup bool
+	LogHttp bool
+}
+
+func NewTasksServer(config Config) Server {
 	store := store.New("./todo.db")
 	server := Server{}
-	store.Open(cleanup)
+	store.Open(config.Cleanup)
 	store.Migrate()
 	server.Store = store
 
 	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+	if config.LogHttp {
+		r.Use(middleware.Logger)
+	}
 	r.Use(middleware.NoCache)
 
 	fs := http.FileServer(http.Dir("static"))

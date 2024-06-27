@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	serve := server.NewTasksServer(false)
+	serve := server.NewTasksServer(server.Config{Cleanup: false, LogHttp: true})
 	http.ListenAndServe(":3000", serve.Router)
 }

@@ -4,3 +4,4 @@ static/style.css
 **/*.db
 htmx.js
 coverage.out
+tests/e2e/static
