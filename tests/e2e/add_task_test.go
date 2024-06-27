@@ -9,12 +9,13 @@ import (
 func TestAddTask(t *testing.T) {
 	g := setup(t)
 
-	p := g.page("http://localhost:3000")
+	p := g.page("/")
 	text := faker.ColorName()
 
 	// NOTE: no need to use type key enter event
-	p.MustElement("#new-task").MustInput(text)
+	wait := p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()
 
-	// NOTE: it is better to use this than text equality with got
-	p.MustElementR("li", text).MustVisible()
+	wait()
+
+	g.Eq(p.MustElement("li").MustText(), text)
 }
