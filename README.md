@@ -50,7 +50,7 @@ air
   - [ ] completed tasks
 
 ## e2e ui test with rod
-- [ ] add task
+- [x] add task
 - [ ] remove task
 - [ ] list tasks
 - [ ] filter tasks

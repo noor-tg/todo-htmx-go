@@ -48,25 +48,3 @@ func serve() *httptest.Server {
 	srvr := httptest.NewServer(serve.Router)
 	return srvr
 }
-
-// func serve() {
-// 	ctx, cancel := context.WithCancel(context.Background())
-// 	cmd := exec.CommandContext(ctx, "go", "run", "cmd/main.go")
-// 	err := cmd.Start()
-// 	if err != nil {
-// 		fmt.Printf("cmd.Start() failed with %s", err)
-// 	}
-
-// 	// Allow the command to run for some time.
-// 	time.Sleep(5 * time.Second)
-
-// 	cancel() // Stop the command.
-
-// 	go func() {
-// 		// Wait for the command to finish.
-// 		err = cmd.Wait()
-// 		if err != nil {
-// 			fmt.Printf("cmd.Wait() failed with %s", err)
-// 		}
-// 	}()
-// }

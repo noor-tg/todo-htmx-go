@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4] - 2024-06-27
+
+### 🚀 Features
+
+- *(search)* Allow search tasks by description
+- *(search)* Allow search with status and description. better style for mobile
+- *(ux)* Add styles and code to handle mobile layout
+- *(db)* Allow cleanup db for testing
+- *(ux)* Prepend new task to tasks list
+
+### 🐛 Bug Fixes
+
+- *(ux)* Hide input elements by css until remove by js
+
+### 🚜 Refactor
+
+- *(config)* Allow to add config to start new server
+
+### 📚 Documentation
+
+- Add changelog
+
+### 🧪 Testing
+
+- Add e2e test util. use color name for tasks values
+- *(add)* Test ui for adding new task
+- *(ux)* Auto start server for tests
+
+### ⚙️ Miscellaneous Tasks
+
+- Rename file to be consistant
+
 ## [1.1] - 2024-06-24
 
 ### 🚀 Features
