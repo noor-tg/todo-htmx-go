@@ -4,9 +4,13 @@ import "alnoor/todo-go-htmx"
 import "fmt"
 
 templ Task(task todo.Task) {
-	<div class="rounded-lg bg-slate-100 flex flex-row items-center justify-between px-2 py-2 lg:py-1">
+	<div
+		class="rounded-lg bg-slate-100 
+		grid grid-flow-row lg:grid-flow-col justify-stretch justify-items-start items-center lg:grid-cols-10 gap-2 
+		px-2 py-2 lg:py-1"
+	>
 		<li
-			class="cursor-pointer px-1 py-2 min-w-fit w-1/2"
+			class="cursor-pointer px-1 py-2 w-full col-span-6 lg:col-span-8"
 			hx-trigger="click"
 			hx-get={ fmt.Sprintf("/tasks/%d", task.Id) }
 			hx-swap="outerHTML"
@@ -16,13 +20,16 @@ templ Task(task todo.Task) {
 			hx-put={ fmt.Sprintf("/tasks/toggle-status/%d", task.Id) }
 			hx-swap="outerHTML"
 			hx-target="closest div"
+			class="lg:col-span-1 col-span-3 justify-self-start mx-2"
 			if task.Status == "مكتمل" {
 				checked="checked"
 			}
 		/>
 		<button
 			type="button"
-			class="hover:bg-red-50 mx-2 text-red-300 leading-none ring-inset ring-2 ring-red-300 font-bold size-10 gl:size-6 text-normal rounded-full"
+			class="lg:col-span-1 col-span-3 justify-self-end 
+						 hover:bg-red-50 text-red-300 leading-none 
+						ring-inset ring-2 ring-red-300 font-bold size-10 gl:size-6 text-normal rounded-full mx-1"
 			hx-delete={ fmt.Sprintf("/tasks/%d", task.Id) }
 			hx-swap="outerHTML"
 			hx-target="closest div"

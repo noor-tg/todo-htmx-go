@@ -14,39 +14,27 @@ templ Index(activeStatus string, tasks []todo.Task, counts todo.Counts) {
 			class="flex flex-col gap-2 mb-2"
 			hx-params="description, status"
 		>
-			<div class="flex flex-row justify-between items-center gap-2">
-				<div class="inline-flex flex-row gap-1 p-1 md:p-2 items-center bg-slate-200 text-sky-600 rounded-full">
+			<div class="grid grid-cols-10 grid-rows-2 lg:grid-rows-1 gap-2">
+				<div class="inline-flex flex-row gap-1 p-1 md:p-2 items-center bg-slate-200 text-sky-600 rounded-full lg:col-span-3 justify-self-start col-span-5">
 					<img src="/static/logo.svg" class="size-10"/>
 					<h1 class="font-bold text-3xl leading-normal ml-4">مهام</h1>
 				</div>
 				<input
-					class="py-2 px-4 focus:outline-none ring focus:ring-slate-200 ring-inset ring-slate-300 rounded-lg text-slate-900 flex-1 hidden lg:inline-block"
+					class="focus:outline-none 
+								 ring focus:ring-slate-200 ring-inset ring-slate-300 
+								rounded-full text-slate-900 lg:col-span-4 col-span-full
+								self-center px-4 py-2
+								order-last"
 					name="description"
-					id="desktop-description"
 					type="search"
 					placeholder="بحث"
 				/>
-				<div class="inline-flex flex-row rounded-full overflow-hidden text-white">
+				<div class="inline-flex flex-row rounded-full overflow-hidden text-white lg:col-span-3 col-span-5 justify-self-center self-center">
 					@StatusLink("الكل", activeStatus)
 					@StatusLink("مكتمل", activeStatus)
 					@StatusLink("مجدول", activeStatus)
 				</div>
 			</div>
-			<input
-				class="p-4 rounded-lg text-slate-900 w-full bg-slate-50 ring-4 ring-inset ring-slate-200 focus:outline-none focus:ring-slate-300 inline-block lg:hidden"
-				name="description"
-				id="mobile-description"
-				type="search"
-				placeholder="بحث"
-			/>
-			<script type="text/javascript">
-			window.addEventListener('DOMContentLoaded', () => {
-				const desktop = document.getElementById('desktop-description');
-				const mobile = document.getElementById('mobile-description');
-  
-			  window.innerWidth <= 600 ? desktop.remove() : mobile.remove()
-			});
-			</script>
 		</form>
 		@Counters(counts, false)
 		@Tasks(tasks)

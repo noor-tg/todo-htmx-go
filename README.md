@@ -9,9 +9,9 @@
 - [x] filter
   - [x] by status
   - [x] by description
-- [ ] counters
-  - [ ] total tasks
-  - [ ] completed tasks
+- [x] counters
+  - [x] total tasks
+  - [x] completed tasks
 
 
 ## Dependances
