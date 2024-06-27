@@ -87,14 +87,24 @@ func (s *Server) IndexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	total, completed, err := s.Store.GetTasksCounters()
+	counts := todo.Counts{Total: total, Completed: completed}
+
+	if err != nil {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		views.ServerError().Render(r.Context(), w)
+		return
+	}
+
 	if target, ok := r.Header["Hx-Target"]; ok {
 		if target[0] == "list" {
 			views.Tasks(tasks).Render(r.Context(), w)
+			views.Counters(counts, true).Render(r.Context(), w)
 		} else {
-			views.Index(activeStatus, tasks).Render(r.Context(), w)
+			views.Index(activeStatus, tasks, counts).Render(r.Context(), w)
 		}
 	} else {
-		views.Index(activeStatus, tasks).Render(r.Context(), w)
+		views.Index(activeStatus, tasks, counts).Render(r.Context(), w)
 	}
 
 }
@@ -123,10 +133,20 @@ func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	total, completed, err := s.Store.GetTasksCounters()
+	counts := todo.Counts{Total: total, Completed: completed}
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
+		return
+	}
+
 	w.WriteHeader(http.StatusCreated)
 
 	views.Task(task).Render(r.Context(), w)
 	views.InputForm(true).Render(r.Context(), w)
+	views.Counters(counts, true).Render(r.Context(), w)
 }
 
 func (s *Server) GetTaskFormHandler(w http.ResponseWriter, r *http.Request) {
@@ -201,7 +221,17 @@ func (s *Server) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	total, completed, err := s.Store.GetTasksCounters()
+	counts := todo.Counts{Total: total, Completed: completed}
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
+		return
+	}
+
 	w.WriteHeader(http.StatusOK)
+	views.Counters(counts, true).Render(r.Context(), w)
 }
 func (s *Server) ToggleStatusOfTaskHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -219,6 +249,15 @@ func (s *Server) ToggleStatusOfTaskHandler(w http.ResponseWriter, r *http.Reques
 		log.Printf("%v\n", err)
 		return
 	}
+	total, completed, err := s.Store.GetTasksCounters()
+	counts := todo.Counts{Total: total, Completed: completed}
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		views.ServerError().Render(r.Context(), w)
+		log.Printf("%v\n", err)
+		return
+	}
 
 	views.Task(task).Render(r.Context(), w)
+	views.Counters(counts, true).Render(r.Context(), w)
 }

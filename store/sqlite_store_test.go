@@ -5,13 +5,14 @@ import (
 	"alnoor/todo-go-htmx/store"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/pioz/faker"
 )
 
 func TestSqliteStore(t *testing.T) {
-	store := store.New("./todo.db")
+	sqlStore := store.New("./todo.db")
 	t.Run("connect correctly to db", func(t *testing.T) {
-		err := store.Open(true)
+		err := sqlStore.Open(true)
 
 		if err != nil {
 			t.Errorf("error in test connect: %v", err)
@@ -19,7 +20,7 @@ func TestSqliteStore(t *testing.T) {
 	})
 
 	t.Run("migrate db", func(t *testing.T) {
-		err := store.Migrate()
+		err := sqlStore.Migrate()
 		if err != nil {
 			t.Errorf("migration test failed: %v", err)
 		}
@@ -30,7 +31,7 @@ func TestSqliteStore(t *testing.T) {
 			Description: "مهمة 10",
 		}
 
-		task, err := store.InsertTask(input.Description)
+		task, err := sqlStore.InsertTask(input.Description)
 		if err != nil {
 			t.Errorf("failed insert test: %v", err)
 		}
@@ -46,8 +47,8 @@ func TestSqliteStore(t *testing.T) {
 
 	t.Run("get all tasks", func(t *testing.T) {
 
-		task, err := store.InsertTask(faker.ColorName())
-		tasks, err := store.GetTasks(nil)
+		task, err := sqlStore.InsertTask(faker.ColorName())
+		tasks, err := sqlStore.GetTasks(nil)
 		if err != nil {
 			t.Errorf("failed to get tasks: %v", err)
 		}
@@ -57,20 +58,20 @@ func TestSqliteStore(t *testing.T) {
 		}
 	})
 	t.Run("filter tasks by params", func(t *testing.T) {
-		task1, err := store.InsertTask(faker.ColorName())
+		task1, err := sqlStore.InsertTask(faker.ColorName())
 		if err != nil {
 			t.Errorf("failed insert task 1: %v", err)
 		}
-		_, err = store.InsertTask(faker.ColorName())
+		_, err = sqlStore.InsertTask(faker.ColorName())
 		if err != nil {
 			t.Errorf("failed insert task 2: %v", err)
 		}
-		task3, err := store.InsertTask(faker.ColorName())
+		task3, err := sqlStore.InsertTask(faker.ColorName())
 		if err != nil {
 			t.Errorf("failed insert task 3: %v", err)
 		}
 
-		tasks, err := store.GetTasks(map[string]string{"description": task3.Description})
+		tasks, err := sqlStore.GetTasks(map[string]string{"description": task3.Description})
 		if err != nil {
 			t.Errorf("failed to get tasks: %v", err)
 		}
@@ -99,13 +100,13 @@ func TestSqliteStore(t *testing.T) {
 			Description: "مهمة 10",
 		}
 
-		task, err := store.InsertTask(input.Description)
+		task, err := sqlStore.InsertTask(input.Description)
 		if err != nil {
 			t.Errorf("failed update test: %v", err)
 		}
 
 		description := "updated task"
-		updatedTask, err := store.UpdateTask(task.Id, description)
+		updatedTask, err := sqlStore.UpdateTask(task.Id, description)
 		if description != updatedTask.Description {
 			t.Errorf("failed update test: wanted %v got %v", description, task.Description)
 		}
@@ -120,11 +121,11 @@ func TestSqliteStore(t *testing.T) {
 			Description: "مهمة 10",
 		}
 
-		task, err := store.InsertTask(input.Description)
+		task, err := sqlStore.InsertTask(input.Description)
 		if err != nil {
 			t.Errorf("failed insert test: %v", err)
 		}
-		existing, err := store.GetTaskById(task.Id)
+		existing, err := sqlStore.GetTaskById(task.Id)
 
 		if err != nil {
 			t.Errorf("failed insert test: %v", err)
@@ -139,16 +140,16 @@ func TestSqliteStore(t *testing.T) {
 			Description: "مهمة 10",
 		}
 
-		task, err := store.InsertTask(input.Description)
+		task, err := sqlStore.InsertTask(input.Description)
 		if err != nil {
 			t.Errorf("failed update test: %v", err)
 		}
 
-		err = store.DeleteTask(task.Id)
+		err = sqlStore.DeleteTask(task.Id)
 		if err != nil {
 			t.Errorf("failed delete test: %v", err)
 		}
-		_, err = store.GetTaskById(task.Id)
+		_, err = sqlStore.GetTaskById(task.Id)
 		if err == nil {
 			t.Errorf("failed delete test: get task by id method should return error")
 		}
@@ -159,12 +160,12 @@ func TestSqliteStore(t *testing.T) {
 			Description: "مهمة 10",
 		}
 
-		task, err := store.InsertTask(input.Description)
+		task, err := sqlStore.InsertTask(input.Description)
 		if err != nil {
 			t.Errorf("failed update test: %v", err)
 		}
 
-		toggled, err := store.ToggleTaskStatus(task.Id)
+		toggled, err := sqlStore.ToggleTaskStatus(task.Id)
 		if err != nil {
 			t.Errorf("failed update test: get task by id method should return error")
 		}
@@ -178,17 +179,17 @@ func TestSqliteStore(t *testing.T) {
 			Description: "مهمة 10",
 		}
 
-		task, err := store.InsertTask(input.Description)
+		task, err := sqlStore.InsertTask(input.Description)
 		if err != nil {
 			t.Errorf("failed update test: %v", err)
 		}
 
-		_, err = store.ToggleTaskStatus(task.Id)
+		_, err = sqlStore.ToggleTaskStatus(task.Id)
 		if err != nil {
 			t.Errorf("failed update test: get task by id method should return error")
 		}
 
-		tasks, err := store.GetTasksByStatus("مكتمل")
+		tasks, err := sqlStore.GetTasksByStatus("مكتمل")
 		if err != nil {
 			t.Errorf("failed to get tasks: %v", err)
 		}
@@ -202,4 +203,68 @@ func TestSqliteStore(t *testing.T) {
 		}
 	})
 
+	t.Run("get tasks count", func(t *testing.T) {
+		db := uuid.NewString() + ".db"
+		sqlStore = store.New(db)
+		sqlStore.Open(true)
+		sqlStore.Migrate()
+
+		sqlStore.InsertTask(faker.ColorName())
+		sqlStore.InsertTask(faker.ColorName())
+		sqlStore.InsertTask(faker.ColorName())
+
+		count, err := sqlStore.GetTasksCount()
+
+		if err != nil {
+			t.Errorf("failed to get tasks: %v", err)
+		}
+
+		if count != 3 {
+			t.Errorf("count is not correct: got %v, wanted %v", count, 3)
+		}
+	})
+
+	t.Run("get completed tasks count", func(t *testing.T) {
+		db := uuid.NewString() + ".db"
+		sqlStore = store.New(db)
+		sqlStore.Open(true)
+		sqlStore.Migrate()
+
+		sqlStore.InsertTask(faker.ColorName())
+		task, _ := sqlStore.InsertTask(faker.ColorName())
+		sqlStore.ToggleTaskStatus(task.Id)
+
+		count, err := sqlStore.GetCompletedTasksCount()
+
+		if err != nil {
+			t.Errorf("failed to get tasks: %v", err)
+		}
+
+		if count != 1 {
+			t.Errorf("count is not correct: got %v, wanted %v", count, 1)
+		}
+	})
+	t.Run("get tasks counters: total , completed", func(t *testing.T) {
+		db := uuid.NewString() + ".db"
+		sqlStore = store.New(db)
+		sqlStore.Open(true)
+		sqlStore.Migrate()
+
+		sqlStore.InsertTask(faker.ColorName())
+		task, _ := sqlStore.InsertTask(faker.ColorName())
+		sqlStore.ToggleTaskStatus(task.Id)
+
+		total, completed, err := sqlStore.GetTasksCounters()
+
+		if err != nil {
+			t.Errorf("failed to get tasks: %v", err)
+		}
+
+		if total != 2 {
+			t.Errorf("total is not correct: got %v, wanted %v", total, 2)
+		}
+		if completed != 1 {
+			t.Errorf("count is not correct: got %v, wanted %v", completed, 1)
+		}
+	})
 }

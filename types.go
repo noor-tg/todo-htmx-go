@@ -22,3 +22,8 @@ var TestCfg = Config{
 	LogHttp: false,
 	DB:      "./test.db",
 }
+
+type Counts struct {
+	Total     int
+	Completed int
+}

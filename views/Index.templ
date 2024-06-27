@@ -1,8 +1,9 @@
 package views
 
+import "fmt"
 import "alnoor/todo-go-htmx"
 
-templ Index(activeStatus string, tasks []todo.Task) {
+templ Index(activeStatus string, tasks []todo.Task, counts todo.Counts) {
 	@Layout() {
 		<form
 			hx-target="#list"
@@ -13,16 +14,19 @@ templ Index(activeStatus string, tasks []todo.Task) {
 			class="flex flex-col gap-2 mb-2"
 			hx-params="description, status"
 		>
-			<div class="text-white bg-sky-600 rounded flex flex-row justify-between items-center p-2 gap-2">
-				<h1 class="font-bold text-4xl leading-normal ml-4">مهام</h1>
+			<div class="flex flex-row justify-between items-center gap-2">
+				<div class="inline-flex flex-row gap-1 p-1 md:p-2 items-center bg-slate-200 text-sky-600 rounded-full">
+					<img src="/static/logo.svg" class="size-10"/>
+					<h1 class="font-bold text-3xl leading-normal ml-4">مهام</h1>
+				</div>
 				<input
-					class="py-2 px-4 focus:outline-none focus:ring ring-inset ring-slate-300 rounded-lg text-slate-900 flex-1 hidden lg:inline-block"
+					class="py-2 px-4 focus:outline-none ring focus:ring-slate-200 ring-inset ring-slate-300 rounded-lg text-slate-900 flex-1 hidden lg:inline-block"
 					name="description"
 					id="desktop-description"
 					type="search"
 					placeholder="بحث"
 				/>
-				<div class="inline-flex flex-row rounded-full overflow-hidden">
+				<div class="inline-flex flex-row rounded-full overflow-hidden text-white">
 					@StatusLink("الكل", activeStatus)
 					@StatusLink("مكتمل", activeStatus)
 					@StatusLink("مجدول", activeStatus)
@@ -44,9 +48,27 @@ templ Index(activeStatus string, tasks []todo.Task) {
 			});
 			</script>
 		</form>
+		@Counters(counts, false)
 		@Tasks(tasks)
 		@InputForm(false)
 	}
+}
+
+templ Counters(counts todo.Counts, OOB bool) {
+	<div
+		id="counters"
+		class="flex flex-row justify-between items-center text-slate-900 w-full p-2"
+		if OOB {
+			hx-swap-oob="true"
+		}
+	>
+		<div class="flex flex-row justify-between items-center">
+			<span>الكل</span>:<span>{ fmt.Sprintf("%d", counts.Total) }</span>
+		</div>
+		<div class="flex flex-row justify-between items-center">
+			<span>مكتملة</span>:<span>{ fmt.Sprintf("%d",counts.Completed) }</span>
+		</div>
+	</div>
 }
 
 templ Tasks(tasks []todo.Task) {
@@ -67,7 +89,7 @@ func linkBG(status, active string) string {
 
 templ StatusLink(status, activeStatus string) {
 	<label
-		class={ "p-2 hover:bg-sky-500 active:bg-sky-700 first:pr-3 last:pl-3", linkBG(status, activeStatus) }
+		class={ "p-1 lg:p-2 hover:bg-sky-500 active:bg-sky-700 first:pr-3 last:pl-3", linkBG(status, activeStatus) }
 	>
 		<input
 			name="status"

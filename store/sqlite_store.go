@@ -278,3 +278,47 @@ func (s *SqliteStore) GetTasksByStatus(status string) ([]todo.Task, error) {
 
 	return tasks, nil
 }
+
+func (s *SqliteStore) GetTasksCount() (int, error) {
+	single := s.DB.QueryRow("SELECT count(*) as count FROM tasks")
+
+	count := 0
+
+	err := single.Scan(&count)
+
+	if err != nil {
+		log.Printf("%v\n", err)
+		return count, err
+	}
+	return count, nil
+}
+
+func (s *SqliteStore) GetCompletedTasksCount() (int, error) {
+	single := s.DB.QueryRow("SELECT count(*) as count FROM tasks where status = ?", "مكتمل")
+
+	count := 0
+
+	err := single.Scan(&count)
+
+	if err != nil {
+		log.Printf("%v\n", err)
+		return count, err
+	}
+	return count, nil
+}
+
+func (s *SqliteStore) GetTasksCounters() (int, int, error) {
+	total, err := s.GetTasksCount()
+	if err != nil {
+		log.Printf("%v\n", err)
+		return 0, 0, err
+	}
+
+	completed, err := s.GetCompletedTasksCount()
+	if err != nil {
+		log.Printf("%v\n", err)
+		return 0, 0, err
+	}
+
+	return total, completed, nil
+}
