@@ -4,7 +4,6 @@ import (
 	"alnoor/todo-go-htmx"
 	"alnoor/todo-go-htmx/store"
 	"alnoor/todo-go-htmx/views"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -203,7 +202,6 @@ func (s *Server) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprint(w, "")
 }
 func (s *Server) ToggleStatusOfTaskHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
@@ -215,7 +213,6 @@ func (s *Server) ToggleStatusOfTaskHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	task, err := s.Store.ToggleTaskStatus(id)
-	fmt.Println(task)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		views.ServerError().Render(r.Context(), w)

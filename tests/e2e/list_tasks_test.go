@@ -24,3 +24,86 @@ func TestListTasks(t *testing.T) {
 		g.Eq(li.MustText(), list[len(list)-idx-1])
 	}
 }
+
+func TestFilterByDescriptionTasks(t *testing.T) {
+	g := setup(t)
+
+	p := g.page("/")
+	list := []string{faker.ColorName(), faker.ColorName(), faker.ColorName(), faker.ColorName()}
+
+	for _, text := range list {
+		// NOTE: no need to use type key enter event
+		p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+	}
+
+	p.MustElement("input[name=description]").MustInput(list[1]).Page().MustWaitRequestIdle()()
+
+	p.MustElement("li").MustVisible()
+	g.Eq(p.MustElement("li").MustText(), list[1])
+}
+
+func TestFilterByStatusTasks(t *testing.T) {
+	// setup
+	g := setup(t)
+	p := g.page("/")
+
+	// prepare tasks descriptions
+	list := []string{faker.ColorName(), faker.ColorName(), faker.ColorName(), faker.ColorName()}
+
+	// add new task for each description in list . wait for network idle
+	for _, text := range list {
+		// NOTE: no need to use type key enter event
+		p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+	}
+
+	// edit input checkbox
+	editInput := `//*[@id="list"]/div[1]/input`
+	// click the checkbox (to make it scheduled)
+	p.MustElementX(editInput).MustClick().Page().MustWaitRequestIdle()()
+
+	// filter by scheduled
+	scheduleStateBtn := "/html/body/div/form/div/div/label[2]"
+	p.MustElementX(scheduleStateBtn).MustClick().Page().MustWaitRequestIdle()()
+
+	// it must be visible
+	g.Eq(p.MustElement("li").MustVisible(), true)
+	// last item was checked as complete
+	g.Eq(p.MustElement("li").MustText(), list[len(list)-1])
+	// there should be only one li in tasks list
+	g.Eq(len(p.MustElements("#list li")), 1)
+}
+
+func TestFilterByDescriptionAndStatusTasks(t *testing.T) {
+	// setup
+	g := setup(t)
+	p := g.page("/")
+
+	// prepare tasks descriptions
+	task1 := faker.ColorName()
+	task2 := faker.ColorName()
+
+	p.MustElement("#new-task").MustInput(task1).Page().MustWaitRequestIdle()()
+	p.MustElement("#new-task").MustInput(task1).Page().MustWaitRequestIdle()()
+
+	p.MustElement("#new-task").MustInput(task2).Page().MustWaitRequestIdle()()
+	p.MustElement("#new-task").MustInput(task2).Page().MustWaitRequestIdle()()
+	p.MustElement("#new-task").MustInput(task2).Page().MustWaitRequestIdle()()
+
+	// edit input checkbox
+	editInput := `//*[@id="list"]/div[1]/input`
+	// click the checkbox (to make it scheduled)
+	p.MustElementX(editInput).MustClick().Page().MustWaitRequestIdle()()
+
+	// filter by scheduled
+	scheduleStateBtn := "/html/body/div/form/div/div/label[3]"
+	p.MustElementX(scheduleStateBtn).MustClick().Page().MustWaitRequestIdle()()
+	// show only tasks contain task2 description
+	p.MustElement("input[name=description]").MustInput(task2).Page().MustWaitRequestIdle()()
+
+	// it must be visible
+	g.Eq(p.MustElement("li").MustVisible(), true)
+	// last item was checked as complete
+	g.Eq(p.MustElement("li").MustText(), task2)
+	// there should be only one li in tasks list
+	g.Eq(len(p.MustElements("#list li")), 2)
+}

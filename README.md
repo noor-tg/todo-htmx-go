@@ -54,6 +54,10 @@ air
 - [x] remove task
 - [x] edit task
 - [x] list tasks
-- [ ] filter tasks
+- [x] toggle task status
+- [x] filter tasks
+  - [x] by status
+  - [x] by description
+  - [x] by status and description
 - [ ] counters
   

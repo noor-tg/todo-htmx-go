@@ -28,3 +28,22 @@ func TestEditTask(t *testing.T) {
 
 	g.Eq(p.MustElement("li").MustText(), newText)
 }
+
+func TestToggleTaskStatus(t *testing.T) {
+	g := setup(t)
+
+	p := g.page("/")
+	text := faker.ColorName()
+
+	// NOTE: no need to use type key enter event
+	// NOTE: ()() to start wait for networkIlde instead of preparing one
+	p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+
+	editInput := `//*[@id="list"]/div[1]/input`
+
+	// click the checkbox
+	p.MustElementX(editInput).MustClick().Page().MustWaitRequestIdle()()
+
+	// NOTE: use * to dereference string pointer returned from the function
+	g.Eq(*p.MustElementX(editInput).MustAttribute("checked"), "checked")
+}
