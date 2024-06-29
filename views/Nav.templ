@@ -7,29 +7,28 @@ templ Nav(activeStatus string) {
 		hx-trigger="input"
 		hx-get="/"
 		hx-push-url="true"
-		class="flex flex-col gap-2 mb-2"
+		class="grid grid-flow-row lg:grid-cols-[150px_auto_180px] grid-cols-[140px_auto] grid-rows-2 lg:grid-rows-1 mb-2 gap-2"
 		hx-params="description, status"
 	>
-		<div class="grid grid-cols-10 grid-rows-2 lg:grid-rows-1 gap-2">
-			<div class="inline-flex flex-row gap-1 p-1 md:p-2 items-center bg-slate-200 text-sky-600 rounded-full lg:col-span-3 justify-self-start col-span-5">
-				<img src="/static/logo.svg" class="size-10"/>
-				<h1 class="font-bold text-3xl leading-normal ml-4">مهام</h1>
-			</div>
-			<input
-				class="focus:outline-none 
-								 ring focus:ring-slate-200 ring-inset ring-slate-300 
-								rounded-full text-slate-900 lg:col-span-4 col-span-full
-								self-center px-4 py-2
-								order-last"
-				name="description"
-				type="search"
-				placeholder="بحث"
-			/>
-			<div class="inline-flex flex-row rounded-full overflow-hidden text-white lg:col-span-3 col-span-5 justify-self-center self-center">
-				@StatusLink("الكل", activeStatus)
-				@StatusLink("مكتمل", activeStatus)
-				@StatusLink("مجدول", activeStatus)
-			</div>
+		<div class="inline-flex flex-row justify-start lg:ps-2 gap-1 p-1 md:p-2 items-center bg-slate-200 text-sky-600 rounded-full self-center row-start-1">
+			<img src="/static/logo.svg" class="size-10"/>
+			<h1 class="font-bold text-3xl leading-normal">مهام</h1>
+		</div>
+		<input
+			class="focus:outline-none 
+						ring focus:ring-slate-200 ring-inset ring-slate-300 
+						rounded-lg text-slate-900 
+						px-4 py-2 self-center row-start-2 col-span-2
+						lg:row-start-1 
+						"
+			name="description"
+			type="search"
+			placeholder="بحث"
+		/>
+		<div class="inline-flex flex-row justify-around items-center rounded-lg text-white justify-self-stretch self-center row-start-1">
+			@StatusLink("الكل", activeStatus)
+			@StatusLink("مكتمل", activeStatus)
+			@StatusLink("مجدول", activeStatus)
 		</div>
 	</form>
 }

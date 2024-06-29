@@ -47,7 +47,7 @@ func linkBG(status, active string) string {
 
 templ StatusLink(status, activeStatus string) {
 	<label
-		class={ "p-1 lg:p-2 hover:bg-sky-500 active:bg-sky-700 first:pr-3 last:pl-3", linkBG(status, activeStatus) }
+		class={ "first:rounded-s-lg last:rounded-e-lg py-1 text-center flex-1 lg:py-2 hover:bg-sky-500 active:bg-sky-700", linkBG(status, activeStatus) }
 	>
 		<input
 			name="status"
