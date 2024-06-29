@@ -20,7 +20,7 @@ templ Task(task todo.Task) {
 			hx-put={ fmt.Sprintf("/tasks/toggle-status/%d", task.Id) }
 			hx-swap="outerHTML"
 			hx-target="closest div"
-			class="lg:col-span-1 col-span-3 justify-self-start mx-2"
+			class="lg:col-span-1 col-span-3 justify-self-start mx-2 size-6"
 			if task.Status == "مكتمل" {
 				checked="checked"
 			}
@@ -29,7 +29,7 @@ templ Task(task todo.Task) {
 			type="button"
 			class="lg:col-span-1 col-span-3 justify-self-end 
 						 hover:bg-red-50 text-red-300 leading-none 
-						ring-inset ring-2 ring-red-300 font-bold size-10 gl:size-6 text-normal rounded-full mx-1"
+						ring-inset ring-2 ring-red-300 font-bold size-8 gl:size-6 text-normal rounded-full mx-1"
 			hx-delete={ fmt.Sprintf("/tasks/%d", task.Id) }
 			hx-swap="outerHTML"
 			hx-target="closest div"
