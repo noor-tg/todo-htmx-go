@@ -1,11 +1,10 @@
 @tailwind base;
 @tailwind components;
+@tailwind utilities;
 
 .scrollbar-gutter {
   scrollbar-gutter: stable;
 }
-
-@tailwind utilities;
 
 body {
   direction: rtl;
