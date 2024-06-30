@@ -3,17 +3,23 @@ package views
 import "alnoor/todo-go-htmx"
 import "fmt"
 
+// NOTE: cols-span-2 to fill the input to width of the view in mobile. and lg:col-auto to fill it in lg screens
 templ UpdateForm(task todo.Task) {
-	<input
+	<form
+		class="inline-flex flex-col lg:flex-row justify-start items-start lg:justify-between lg:items-center col-span-2 lg:col-auto row-start-1 gap-2 m-0"
 		hx-put={ fmt.Sprintf("/tasks/%d", task.Id) }
-		name="description"
 		hx-swap="outerHTML"
 		hx-target="closest div"
-		value={ task.Description }
-		placeholder="مهمة جديدة"
-		class="w-full ring-4 ring-slate-400 
+	>
+		<input
+			name="description"
+			value={ task.Description }
+			placeholder="مهمة جديدة"
+			class="w-full flex-1 ring-4 ring-slate-400 
 					 p-3 rounded-lg focus:outline-none 
 					 focus:ring-slate-600
-					 ring-inset my-2"
-	/>
+					 ring-inset"
+		/>
+		@Button("حفظ")
+	</form>
 }
