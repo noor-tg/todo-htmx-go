@@ -11,18 +11,20 @@ templ InputForm(OOB bool, err string) {
 			hx-swap-oob="true"
 		}
 	>
-		<input
-			name="description"
-			placeholder="مهمة جديدة"
-			class="flex-1 ring-4 ring-slate-400 w-full
+		<div class="w-full">
+			<input
+				name="description"
+				placeholder="مهمة جديدة"
+				class="flex-1 ring-4 ring-slate-400 w-full
 							 p-3 rounded-lg focus:outline-none 
 							 focus:ring-slate-600
 							ring-inset my-2
 							"
-		/>
-		if len(err) > 0 {
-			<span class="text-sm text-red-500">{ err }</span>
-		}
+			/>
+			if len(err) > 0 {
+				<span class="text-sm text-red-500">{ err }</span>
+			}
+		</div>
 		@Button("أضف")
 	</form>
 }
