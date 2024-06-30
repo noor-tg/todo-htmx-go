@@ -120,8 +120,10 @@ func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	description := templ.EscapeString(r.Form.Get("description"))
 	if description == "" {
+		w.Header().Set("HX-Retarget", "#new-task")
+		w.Header().Set("HX-Reswap", "outerHTML")
 		w.WriteHeader(http.StatusUnprocessableEntity)
-		views.ServerError().Render(r.Context(), w)
+		views.InputForm(false, "يجرى إدخال وصف المهمة").Render(r.Context(), w)
 		return
 	}
 
@@ -145,7 +147,7 @@ func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 
 	views.Task(task).Render(r.Context(), w)
-	views.InputForm(true).Render(r.Context(), w)
+	views.InputForm(true, "").Render(r.Context(), w)
 	views.Counters(counts, true).Render(r.Context(), w)
 }
 

@@ -6,6 +6,7 @@ templ Head() {
 		<meta charset="utf8"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<script src="/static/htmx.min.js"></script>
+		<script src="/static/response-targets.js"></script>
 		<title>مهام</title>
 		<link rel="icon" type="image/svg+xml" href="/static/logo.svg"/>
 	</head>
@@ -14,7 +15,7 @@ templ Head() {
 templ Layout() {
 	<html>
 		@Head()
-		<body class="text-slate-800">
+		<body class="text-slate-800" hx-ext="response-targets">
 			<div class="lg:w-1/2 p-0 md:w-11/12 md:mx-auto mx-6 md:mt-10 mt-4">
 				{ children... }
 			</div>

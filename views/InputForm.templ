@@ -1,12 +1,12 @@
 package views
 
-templ InputForm(OOB bool) {
+templ InputForm(OOB bool, err string) {
 	<form
 		hx-post="/tasks"
 		hx-target="#list"
 		hx-swap="afterbegin"
 		id="new-task"
-		class="flex flex-col lg:flex-row lg:justify-between lg:items-center items-start gap-2 w-full"
+		class="flex flex-col lg:flex-row lg:justify-between lg:items-center items-start gap-1 w-full"
 		if OOB {
 			hx-swap-oob="true"
 		}
@@ -20,6 +20,9 @@ templ InputForm(OOB bool) {
 							ring-inset my-2
 							"
 		/>
+		if len(err) > 0 {
+			<span class="text-sm text-red-500">{ err }</span>
+		}
 		@Button("أضف")
 	</form>
 }
