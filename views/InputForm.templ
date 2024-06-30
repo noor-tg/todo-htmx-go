@@ -1,20 +1,25 @@
 package views
 
 templ InputForm(OOB bool) {
-	<input
-		id="new-task"
+	<form
 		hx-post="/tasks"
 		hx-target="#list"
 		hx-swap="afterbegin"
-		name="description"
-		placeholder="مهمة جديدة"
-		class="w-full ring-4 ring-slate-400 
+		id="new-task"
+		class="flex flex-col lg:flex-row lg:justify-between lg:items-center items-start gap-2 w-full"
+		if OOB {
+			hx-swap-oob="true"
+		}
+	>
+		<input
+			name="description"
+			placeholder="مهمة جديدة"
+			class="flex-1 ring-4 ring-slate-400 w-full
 							 p-3 rounded-lg focus:outline-none 
 							 focus:ring-slate-600
 							ring-inset my-2
 							"
-		if OOB {
-			hx-swap-oob="true"
-		}
-	/>
+		/>
+		@Button("أضف")
+	</form>
 }

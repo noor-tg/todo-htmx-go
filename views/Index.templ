@@ -30,7 +30,7 @@ templ Counters(counts todo.Counts, OOB bool) {
 }
 
 templ Tasks(tasks []todo.Task) {
-	<ul class="h-4/6 flex flex-col gap-2 overflow-y-auto pl-1 scrollbar-gutter" id="list">
+	<ul class="h-4/6 flex flex-col gap-2 overflow-y-auto pl-1 pb-10 scrollbar-gutter" id="list">
 		for _, task := range tasks {
 			@Task(task)
 		}
