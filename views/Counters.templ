@@ -1,0 +1,21 @@
+package views
+
+import "fmt"
+import "alnoor/todo-go-htmx"
+
+templ Counters(counts todo.Counts, OOB bool) {
+	<div
+		id="counters"
+		class="flex flex-row justify-between items-center text-slate-900 w-full p-2"
+		if OOB {
+			hx-swap-oob="true"
+		}
+	>
+		<div class="flex flex-row justify-between items-center">
+			<span>الكل</span>:<span>{ fmt.Sprintf("%d", counts.Total) }</span>
+		</div>
+		<div class="flex flex-row justify-between items-center">
+			<span>مكتملة</span>:<span>{ fmt.Sprintf("%d",counts.Completed) }</span>
+		</div>
+	</div>
+}
