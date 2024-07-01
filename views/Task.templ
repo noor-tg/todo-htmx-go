@@ -33,6 +33,7 @@ templ Task(task todo.Task) {
 						 hover:bg-red-50 text-red-300 leading-none 
 						ring-inset ring-2 ring-red-300 font-bold size-7 gl:size-6 text-normal rounded-lg"
 			hx-delete={ fmt.Sprintf("/tasks/%d", task.Id) }
+			hx-confirm="هل تريد حذف المهمة ?"
 			hx-swap="outerHTML"
 			hx-target="closest div"
 			title="حذف"
