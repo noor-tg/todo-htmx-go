@@ -11,31 +11,15 @@ body {
   font-family: "Noto Kufi Arabic", sans-serif !important;
 }
 
-@font-face {
-  font-display: block;
-  font-family: "Noto Kufi Arabic";
-  font-style: normal;
-  font-weight: 400;
-  src: url(/static/fonts/NotoKufiArabic-Regular.eot);
-  src:
-    url(/static/fonts/NotoKufiArabic-Regular.eot?#iefix)
-      format("embedded-opentype"),
-    url(/static/fonts/NotoKufiArabic-Regular.woff2) format("woff2"),
-    url(/static/fonts/NotoKufiArabic-Regular.woff) format("woff"),
-    url(/static/fonts/NotoKufiArabic-Regular.ttf) format("truetype");
+/** NOTE: style for progressbar. can not use other selector (like by classname or id) */
+::-webkit-progress-bar {
+  @apply rounded-lg bg-slate-300;
 }
-@font-face {
-  font-display: block;
-  font-family: "Noto Kufi Arabic";
-  font-style: normal;
-  font-weight: 700;
-  src: url(/static/fonts/NotoKufiArabic-Bold.eot);
-  src:
-    url(/static/fonts/NotoKufiArabic-Bold.eot?#iefix)
-      format("embedded-opentype"),
-    url(/static/fonts/NotoKufiArabic-Bold.woff2) format("woff2"),
-    url(/static/fonts/NotoKufiArabic-Bold.woff) format("woff"),
-    url(/static/fonts/NotoKufiArabic-Bold.ttf) format("truetype");
+::-moz-progress-bar {
+  @apply rounded-lg bg-green-400;
+}
+::-webkit-progress-value {
+  @apply rounded-lg bg-green-400;
 }
 
 ::-webkit-scrollbar {

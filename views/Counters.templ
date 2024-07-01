@@ -3,19 +3,34 @@ package views
 import "fmt"
 import "alnoor/todo-go-htmx"
 
-templ Counters(counts todo.Counts, OOB bool) {
+// NOTE: ints must converted to float to get result in float
+
+func animateComplete(counts todo.Counts) string {
+	return fmt.Sprintf("%.2f", ((float32(counts.Completed)/float32(counts.Total))*100)-4)
+}
+
+templ Counters(counts todo.Counts, oldCompleted int, OOB bool) {
 	<div
 		id="counters"
-		class="flex flex-row justify-between items-center text-slate-900 w-full p-2"
+		class="justify-between text-sm items-center text-slate-900 w-full p-2 h-16
+		relative"
 		if OOB {
 			hx-swap-oob="true"
 		}
 	>
-		<div class="flex flex-row justify-between items-center">
-			<span>الكل</span>:<span>{ fmt.Sprintf("%d", counts.Total) }</span>
+		<progress
+			class="w-full"
+			data-old={ fmt.Sprintf("%d", oldCompleted) }
+			data-value={ fmt.Sprintf("%d", counts.Completed) }
+			data-old-completed={ fmt.Sprintf("%d", oldCompleted) }
+			max={ fmt.Sprintf("%d", counts.Total) }
+		></progress>
+		<div class="flex flex-col-reverse gap-4 justify-between items-center absolute left-0 -top-3">
+			<span>الكل</span><span class="font-bold">{ fmt.Sprintf("%d", counts.Total) }</span>
 		</div>
-		<div class="flex flex-row justify-between items-center">
-			<span>مكتملة</span>:<span>{ fmt.Sprintf("%d",counts.Completed) }</span>
+		<div id="completed-counter" class="hidden flex-col-reverse gap-4 justify-between items-center absolute -top-3">
+			<span>مكتملة</span><span class="font-bold">{ fmt.Sprintf("%d",counts.Completed) }</span>
 		</div>
 	</div>
+	<script src="/static/animate-progress.js" type="text/javascript"></script>
 }

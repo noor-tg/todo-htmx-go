@@ -5,7 +5,7 @@ import "alnoor/todo-go-htmx"
 templ Index(activeStatus string, tasks []todo.Task, counts todo.Counts) {
 	@Layout() {
 		@Nav(activeStatus)
-		@Counters(counts, false)
+		@Counters(counts, 0, false)
 		@InputForm(false, "")
 		@Tasks(tasks)
 	}

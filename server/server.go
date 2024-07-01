@@ -99,7 +99,7 @@ func (s *Server) IndexHandler(w http.ResponseWriter, r *http.Request) {
 	if target, ok := r.Header["Hx-Target"]; ok {
 		if target[0] == "list" {
 			views.Tasks(tasks).Render(r.Context(), w)
-			views.Counters(counts, true).Render(r.Context(), w)
+			views.Counters(counts, 0, true).Render(r.Context(), w)
 		} else {
 			views.Index(activeStatus, tasks, counts).Render(r.Context(), w)
 		}
@@ -148,7 +148,7 @@ func (s *Server) PostTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	views.Task(task).Render(r.Context(), w)
 	views.InputForm(true, "").Render(r.Context(), w)
-	views.Counters(counts, true).Render(r.Context(), w)
+	views.Counters(counts, counts.Completed-1, true).Render(r.Context(), w)
 }
 
 func (s *Server) GetTaskFormHandler(w http.ResponseWriter, r *http.Request) {
@@ -233,10 +233,11 @@ func (s *Server) DeleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	views.Counters(counts, true).Render(r.Context(), w)
+	views.Counters(counts, counts.Completed+1, true).Render(r.Context(), w)
 }
 func (s *Server) ToggleStatusOfTaskHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(chi.URLParam(r, "id"))
+
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		views.ServerError().Render(r.Context(), w)
@@ -244,15 +245,8 @@ func (s *Server) ToggleStatusOfTaskHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	task, err := s.Store.ToggleTaskStatus(id)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		views.ServerError().Render(r.Context(), w)
-		log.Printf("%v\n", err)
-		return
-	}
-	total, completed, err := s.Store.GetTasksCounters()
-	counts := todo.Counts{Total: total, Completed: completed}
+	counts, task, oldCompleted, err := ToggleAndAnimationData(&s.Store, id)
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		views.ServerError().Render(r.Context(), w)
@@ -261,5 +255,42 @@ func (s *Server) ToggleStatusOfTaskHandler(w http.ResponseWriter, r *http.Reques
 	}
 
 	views.Task(task).Render(r.Context(), w)
-	views.Counters(counts, true).Render(r.Context(), w)
+	views.Counters(counts, oldCompleted, true).Render(r.Context(), w)
+}
+
+func ToggleAndAnimationData(store *store.SqliteStore, id int) (todo.Counts, todo.Task, int, error) {
+	// get old task info
+	old, err := store.GetTaskById(id)
+	if err != nil {
+		return todo.Counts{}, todo.Task{}, 0, err
+	}
+
+	// toggle task and get task info
+	task, err := store.ToggleTaskStatus(id)
+
+	if err != nil {
+		return todo.Counts{}, todo.Task{}, 0, err
+	}
+
+	// calc complete increase or decrease
+	encreaseCount := false
+	if old.Status == "مكتمل" && task.Status == "مجدول" {
+		encreaseCount = false
+	}
+	if old.Status == "مجدول" && task.Status == "مكتمل" {
+		encreaseCount = true
+	}
+
+	// get tasks counts
+	total, completed, err := store.GetTasksCounters()
+	counts := todo.Counts{Total: total, Completed: completed}
+	oldCompleted := 0
+	if encreaseCount {
+		oldCompleted = counts.Completed - 1
+	} else {
+		oldCompleted = counts.Completed + 1
+	}
+
+	// return data
+	return counts, task, oldCompleted, nil
 }
