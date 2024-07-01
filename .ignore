@@ -1,1 +1,5 @@
-static/*
+static/htmx.min.js
+static/htmx.js
+static/style.css
+static/response-targets.js
+static/fonts/*
