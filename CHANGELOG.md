@@ -2,6 +2,37 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11] - 2024-07-01
+
+### 🚀 Features
+
+- *(ux)* Add button to submit form for input new task
+- *(ux)* Update form to use button for update form
+- *(ux)* Show validation error on adding new task
+- *(counters)* Convert counters to progressbar
+- *(delete)* Show browser confirm dialog when try to delete task
+
+### 🐛 Bug Fixes
+
+- *(ux)* Nav layout fix for lg and xs screens
+- *(ux)* Layout for validation error show in desktop
+
+### 🚜 Refactor
+
+- *(ux)* Use grid to display head and task info
+- *(ux)* Move input to top after counters. extract nav to component
+- *(ux)* Resize buttons
+- *(ux)* Change utility set in css
+- *(views)* Extract counters to file
+
+### 📚 Documentation
+
+- Add changelog
+
+### ⚙️ Miscellaneous Tasks
+
+- Stop ignore some frontend assets in frontend
+
 ## [1.6] - 2024-06-27
 
 ### 🚀 Features
