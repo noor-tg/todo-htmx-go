@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.11.2] - 2024-07-01
+
+### 🐛 Bug Fixes
+
+- *(counters)* Hide all label when completed = all. fix label position
+
+## [1.11.1] - 2024-07-01
+
+### 🐛 Bug Fixes
+
+- *(counters)* Hide completed tasks text when all is complete
+
+### 📚 Documentation
+
+- Add changelog
+
 ## [1.11] - 2024-07-01
 
 ### 🚀 Features
