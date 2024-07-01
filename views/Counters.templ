@@ -28,9 +28,11 @@ templ Counters(counts todo.Counts, oldCompleted int, OOB bool) {
 		<div class="flex flex-col-reverse gap-4 justify-between items-center absolute left-0 -top-3">
 			<span>الكل</span><span class="font-bold">{ fmt.Sprintf("%d", counts.Total) }</span>
 		</div>
-		<div id="completed-counter" class="hidden flex-col-reverse gap-4 justify-between items-center absolute -top-3">
-			<span>مكتملة</span><span class="font-bold">{ fmt.Sprintf("%d",counts.Completed) }</span>
-		</div>
+		if counts.Total != counts.Completed {
+			<div id="completed-counter" class="hidden flex-col-reverse gap-4 justify-between items-center absolute -top-3">
+				<span>مكتملة</span><span class="font-bold">{ fmt.Sprintf("%d",counts.Completed) }</span>
+			</div>
+		}
 	</div>
 	<script src="/static/animate-progress.js" type="text/javascript"></script>
 }

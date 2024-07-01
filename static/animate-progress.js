@@ -2,8 +2,10 @@ function animateProgressBar() {
   // elements
   let progressBar = document.querySelector("progress");
   let completedCounter = document.querySelector("#completed-counter");
-  let countElement = completedCounter.children.item(1);
-
+  let countElement;
+  if (completedCounter != null) {
+    countElement = completedCounter.children.item(1);
+  }
   // original to animate to
   let original = parseFloat(progressBar.getAttribute("data-value"));
   // max to calculate completed persentage of current value
@@ -19,16 +21,20 @@ function animateProgressBar() {
   // set value to old value to start animation
   // -- set current to old
   progressBar.value = old;
-  // show count label
-  completedCounter.style.display = `flex`;
-  // set starting right position to calculated right
-  completedCounter.style.right = `${right(progressBar.value)}px`;
-  countElement.innerText = Math.ceil(progressBar.value);
+  if (completedCounter != null) {
+    // show count label
+    completedCounter.style.display = `flex`;
+    // set starting right position to calculated right
+    completedCounter.style.right = `${right(progressBar.value)}px`;
+    countElement.innerText = Math.ceil(progressBar.value);
+  }
   // animation timer
   let timer = 5;
   function updateProgress() {
-    completedCounter.style.right = `${right(progressBar.value)}px`;
-    countElement.innerText = Number(progressBar.value).toFixed(0);
+    if (completedCounter != null) {
+      completedCounter.style.right = `${right(progressBar.value)}px`;
+      countElement.innerText = Number(progressBar.value).toFixed(0);
+    }
     if (original < old) {
       if (progressBar.value > original) {
         progressBar.value -= 0.02;
