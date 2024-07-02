@@ -29,10 +29,11 @@ func NewTasksServer(config todo.Config) Server {
 	if config.LogHttp {
 		r.Use(middleware.Logger)
 	}
+
 	r.Use(middleware.NoCache)
 
-	fs := http.FileServer(http.Dir("static"))
-	r.Handle("/static/*", http.StripPrefix("/static/", fs))
+	// import embedded directory with http.FS
+	r.Handle("/static/*", http.FileServer(http.FS(todo.Static)))
 
 	r.Get("/", server.IndexHandler)
 	r.Post("/tasks", server.PostTaskHandler)

@@ -9,3 +9,6 @@ live/server:
 
 live:
 	make -j3 live/server live/styles live/templ
+
+build:
+	go build -o tmp/todo cmd/main.go

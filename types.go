@@ -1,5 +1,12 @@
 package todo
 
+import "embed"
+
+// must used from here to embed static dir. can not use ./ ../ in embed
+
+//go:embed static
+var Static embed.FS
+
 type Task struct {
 	Id          int
 	Description string
