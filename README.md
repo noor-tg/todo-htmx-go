@@ -61,3 +61,5 @@ air
   - [x] by status and description
 - [ ] counters
   
+## License 
+It is free and open source. use it however you want.
