@@ -7,7 +7,7 @@ import "alnoor/todo-go-htmx"
 templ Counters(counts todo.Counts, oldCompleted int, OOB bool) {
 	<div
 		id="counters"
-		class="justify-between text-sm items-center text-slate-900 w-full p-2 h-16
+		class="justify-between text-sm items-center text-slate-900 w-full py-2 h-16
 		relative"
 		if OOB {
 			hx-swap-oob="true"
@@ -25,8 +25,8 @@ templ Counters(counts todo.Counts, oldCompleted int, OOB bool) {
 				<span>الكل</span><span class="font-bold">{ fmt.Sprintf("%d", counts.Total) }</span>
 			</div>
 		}
-		<div id="completed-counter" class="hidden flex-col gap-4 justify-between items-center absolute -top-3">
-			<span class="font-bold">{ fmt.Sprintf("%d",counts.Completed) }</span><span class="z-10 bg-slate-100 rounded-lg px-2">مكتملة</span>
+		<div id="completed-counter" class={ "hidden flex-col gap-4 justify-between items-start absolute -top-3" }>
+			<span class="font-bold">{ fmt.Sprintf("%d",counts.Completed) }</span><span class="z-10 bg-slate-100 rounded-lg">مكتملة</span>
 		</div>
 	</div>
 	<script src="/static/animate-progress.js" type="text/javascript"></script>

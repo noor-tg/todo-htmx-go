@@ -11,7 +11,15 @@ function animateProgressBar() {
   let old = parseFloat(progressBar.getAttribute("data-old-completed"));
   // calculate position right based on multiple values
   let right = (value) => {
-    let val = window.innerWidth < 400 ? 0.07 : 0.04;
+    // used to calc value based on multiple params
+    let val;
+    // if tasks == 0
+    if (value == 0) {
+      val = 0.001;
+    } else {
+      // there is at least one task complete
+      val = 0.01;
+    }
     counterWidth = val * progressBar.clientWidth;
     // convert from persentage to value in pixel using progressbar width
     return (parseFloat(value) / max) * progressBar.clientWidth - counterWidth;

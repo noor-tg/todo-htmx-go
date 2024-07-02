@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🐛 Bug Fixes
+
+- *(counters)* Use right align for completed label
+
+### 📚 Documentation
+
+- Add changelog
+- Add license
+
+### Build
+
+- Embed static files in project binary
+
 ## [1.11.2] - 2024-07-01
 
 ### 🐛 Bug Fixes
