@@ -83,18 +83,12 @@ func (s *SqliteStore) InsertTask(description string) (todo.Task, error) {
 	return out, nil
 }
 
-func (s *SqliteStore) GetTasks(filters map[string]string) ([]todo.Task, error) {
+func (s *SqliteStore) GetTasks(filter todo.Task) ([]todo.Task, error) {
 	query := `SELECT * FROM tasks`
 	var queryArgs []interface{}
 
-	if filters != nil {
-		query, queryArgs = FilterBy(
-			filters, query, queryArgs, "status", "=",
-		)
-		query, queryArgs = FilterBy(
-			filters, query, queryArgs, "description", "LIKE",
-		)
-	}
+	FilterBy("status", "=", filter.Status, &query, &queryArgs)
+	FilterBy("description", "LIKE", filter.Description, &query, &queryArgs)
 
 	fmt.Println(query)
 	query += " ORDER BY id DESC"
@@ -118,22 +112,20 @@ func (s *SqliteStore) GetTasks(filters map[string]string) ([]todo.Task, error) {
 	return tasks, nil
 }
 
-func FilterBy(filters map[string]string, query string, queryArgs []interface{}, key string, operator string) (string, []interface{}) {
-	filter, filterExists := filters[key]
-	if filterExists {
-		if !ContainWhere(query) {
-			query += " WHERE"
+func FilterBy(key string, operator string, filter string, query *string, queryArgs *[]interface{}) {
+	if filter != "" {
+		if !ContainWhere(*query) {
+			*query += " WHERE"
 		} else {
-			query += " AND"
+			*query += " AND"
 		}
 		if operator == "LIKE" {
-			queryArgs = append(queryArgs, fmt.Sprintf("%%%s%%", filter))
+			*queryArgs = append(*queryArgs, fmt.Sprintf("%%%s%%", filter))
 		} else {
-			queryArgs = append(queryArgs, filter)
+			*queryArgs = append(*queryArgs, filter)
 		}
-		query += fmt.Sprintf(" %s %s ?", key, operator)
+		*query += fmt.Sprintf(" %s %s ?", key, operator)
 	}
-	return query, queryArgs
 }
 
 func ContainWhere(query string) bool {

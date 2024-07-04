@@ -58,29 +58,12 @@ func (s *Server) IndexHandler(w http.ResponseWriter, r *http.Request) {
 		activeStatus = ""
 	}
 
-	// not status, empty search
-	if len(activeStatus) == 0 && len(description) == 0 {
-		tasks, err = s.Store.GetTasks(nil)
-	}
-	// status, search
-	if len(activeStatus) > 0 && len(description) > 0 {
-		tasks, err = s.Store.GetTasks(map[string]string{
-			"description": description,
-			"status":      activeStatus,
-		})
-	}
-	// not status, search
-	if len(activeStatus) == 0 && len(description) > 0 {
-		tasks, err = s.Store.GetTasks(map[string]string{
-			"description": description,
-		})
-	}
-	// status, no search
-	if len(activeStatus) > 0 && len(description) == 0 {
-		tasks, err = s.Store.GetTasks(map[string]string{
-			"status": activeStatus,
-		})
-	}
+	var search todo.Task
+
+	search.Description = description
+	search.Status = activeStatus
+
+	tasks, err = s.Store.GetTasks(search)
 
 	if err != nil {
 		w.WriteHeader(http.StatusUnprocessableEntity)

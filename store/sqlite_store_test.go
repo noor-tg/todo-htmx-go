@@ -48,7 +48,7 @@ func TestSqliteStore(t *testing.T) {
 	t.Run("get all tasks", func(t *testing.T) {
 
 		task, err := sqlStore.InsertTask(faker.ColorName())
-		tasks, err := sqlStore.GetTasks(nil)
+		tasks, err := sqlStore.GetTasks(todo.Task{})
 		if err != nil {
 			t.Errorf("failed to get tasks: %v", err)
 		}
@@ -71,7 +71,7 @@ func TestSqliteStore(t *testing.T) {
 			t.Errorf("failed insert task 3: %v", err)
 		}
 
-		tasks, err := sqlStore.GetTasks(map[string]string{"description": task3.Description})
+		tasks, err := sqlStore.GetTasks(task3)
 		if err != nil {
 			t.Errorf("failed to get tasks: %v", err)
 		}

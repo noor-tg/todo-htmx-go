@@ -21,8 +21,8 @@ type G struct {
 
 // setup for tests.
 var setup = func() func(t *testing.T) G {
-	u := launcher.New().Headless(false).Bin("brave").MustLaunch()
-	browser := rod.New().Trace(true).ControlURL(u).MustConnect()
+	u := launcher.New().Headless(true).Bin("brave").MustLaunch()
+	browser := rod.New().ControlURL(u).MustConnect()
 
 	return func(t *testing.T) G {
 		// NOTE: run in Parallel has problem with testing db.
