@@ -13,15 +13,10 @@ func TestDeleteTask(t *testing.T) {
 	text := faker.ColorName()
 
 	// NOTE: no need to use type key enter event
-	p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+	AddNewTaskOp(p, text)
 
-	g.Eq(p.MustElement("li").MustText(), text)
-
-	button := `//*[@id="list"]/div[1]/button`
-	p.MustElementX(button).MustClick().Page().MustWaitRequestIdle()()
-
-	// NOTE: check for button not exist in dom
-	g.Eq(len(p.MustElementsX(button)), 0)
+	button := DeleteTaskOp(g, p, text)
+	AssertElNotExist(g, p, button)
 	// NOTE: check for li not exist in list
 	g.Eq(p.MustElement("#list").MustHas("li"), false)
 }

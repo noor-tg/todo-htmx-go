@@ -13,8 +13,7 @@ func TestListTasks(t *testing.T) {
 	list := []string{faker.ColorName(), faker.ColorName(), faker.ColorName(), faker.ColorName()}
 
 	for _, text := range list {
-		// NOTE: no need to use type key enter event
-		p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+		AddNewTaskOp(p, text)
 	}
 
 	for idx, li := range p.MustElements("li") {
@@ -32,8 +31,7 @@ func TestFilterByDescriptionTasks(t *testing.T) {
 	list := []string{faker.ColorName(), faker.ColorName(), faker.ColorName(), faker.ColorName()}
 
 	for _, text := range list {
-		// NOTE: no need to use type key enter event
-		p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+		AddNewTaskOp(p, text)
 	}
 
 	p.MustElement("input[name=description]").MustInput(list[1]).Page().MustWaitRequestIdle()()
@@ -52,8 +50,7 @@ func TestFilterByStatusTasks(t *testing.T) {
 
 	// add new task for each description in list . wait for network idle
 	for _, text := range list {
-		// NOTE: no need to use type key enter event
-		p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+		AddNewTaskOp(p, text)
 	}
 
 	// edit input checkbox
@@ -62,7 +59,7 @@ func TestFilterByStatusTasks(t *testing.T) {
 	p.MustElementX(editInput).MustClick().Page().MustWaitRequestIdle()()
 
 	// filter by scheduled
-	scheduleStateBtn := "/html/body/div/form/div/div/label[2]"
+	scheduleStateBtn := "/html/body/div/form[1]/div[2]/label[2]"
 	p.MustElementX(scheduleStateBtn).MustClick().Page().MustWaitRequestIdle()()
 
 	// it must be visible
@@ -82,12 +79,12 @@ func TestFilterByDescriptionAndStatusTasks(t *testing.T) {
 	task1 := faker.ColorName()
 	task2 := faker.ColorName()
 
-	p.MustElement("#new-task").MustInput(task1).Page().MustWaitRequestIdle()()
-	p.MustElement("#new-task").MustInput(task1).Page().MustWaitRequestIdle()()
+	AddNewTaskOp(p, task1)
+	AddNewTaskOp(p, task1)
 
-	p.MustElement("#new-task").MustInput(task2).Page().MustWaitRequestIdle()()
-	p.MustElement("#new-task").MustInput(task2).Page().MustWaitRequestIdle()()
-	p.MustElement("#new-task").MustInput(task2).Page().MustWaitRequestIdle()()
+	AddNewTaskOp(p, task2)
+	AddNewTaskOp(p, task2)
+	AddNewTaskOp(p, task2)
 
 	// edit input checkbox
 	editInput := `//*[@id="list"]/div[1]/input`
@@ -95,7 +92,7 @@ func TestFilterByDescriptionAndStatusTasks(t *testing.T) {
 	p.MustElementX(editInput).MustClick().Page().MustWaitRequestIdle()()
 
 	// filter by scheduled
-	scheduleStateBtn := "/html/body/div/form/div/div/label[3]"
+	scheduleStateBtn := "/html/body/div/form[1]/div[2]/label[3]"
 	p.MustElementX(scheduleStateBtn).MustClick().Page().MustWaitRequestIdle()()
 	// show only tasks contain task2 description
 	p.MustElement("input[name=description]").MustInput(task2).Page().MustWaitRequestIdle()()

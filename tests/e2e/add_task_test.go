@@ -12,8 +12,7 @@ func TestAddTask(t *testing.T) {
 	p := g.page("/")
 	text := faker.ColorName()
 
-	// NOTE: no need to use type key enter event
-	p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+	AddNewTaskOp(p, text)
 
 	g.Eq(p.MustElement("li").MustText(), text)
 }

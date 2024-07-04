@@ -3,8 +3,11 @@ package e2e_test
 import (
 	"testing"
 
+	"github.com/go-rod/rod/lib/input"
 	"github.com/pioz/faker"
 )
+
+const editInput = `//*[@id="list"]/div[1]/form/input`
 
 func TestEditTask(t *testing.T) {
 	g := setup(t)
@@ -12,19 +15,16 @@ func TestEditTask(t *testing.T) {
 	p := g.page("/")
 	text := faker.ColorName()
 
-	// NOTE: no need to use type key enter event
-	// NOTE: ()() to start wait for networkIlde instead of preparing one
-	p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+	AddNewTaskOp(p, text)
 
 	li := `//*[@id="list"]/div[1]/li`
-	editInput := `//*[@id="list"]/div[1]/input`
 
 	p.MustElementX(li).MustClick().Page().MustWaitRequestIdle()()
 
 	newText := faker.ColorName()
 	// mustselect to to select existing text. input "" to remove old text
 	// then input new text
-	p.MustElementX(editInput).MustSelectAllText().MustInput("").MustInput(newText).Page().MustWaitRequestIdle()()
+	p.MustElementX(editInput).MustSelectAllText().MustInput("").MustInput(newText).MustType(input.Enter).Page().MustWaitRequestIdle()()
 
 	g.Eq(p.MustElement("li").MustText(), newText)
 }
@@ -35,15 +35,12 @@ func TestToggleTaskStatus(t *testing.T) {
 	p := g.page("/")
 	text := faker.ColorName()
 
-	// NOTE: no need to use type key enter event
-	// NOTE: ()() to start wait for networkIlde instead of preparing one
-	p.MustElement("#new-task").MustInput(text).Page().MustWaitRequestIdle()()
+	AddNewTaskOp(p, text)
 
-	editInput := `//*[@id="list"]/div[1]/input`
-
+	statusInput := `//*[@id="list"]/div/input`
 	// click the checkbox
-	p.MustElementX(editInput).MustClick().Page().MustWaitRequestIdle()()
+	p.MustElementX(statusInput).MustClick().Page().MustWaitRequestIdle()()
 
 	// NOTE: use * to dereference string pointer returned from the function
-	g.Eq(*p.MustElementX(editInput).MustAttribute("checked"), "checked")
+	g.Eq(*p.MustElementX(statusInput).MustAttribute("checked"), "checked")
 }

@@ -21,8 +21,8 @@ type G struct {
 
 // setup for tests.
 var setup = func() func(t *testing.T) G {
-	u := launcher.New().Headless(true).Bin("brave").MustLaunch()
-	browser := rod.New().ControlURL(u).MustConnect()
+	u := launcher.New().Headless(false).Bin("brave").MustLaunch()
+	browser := rod.New().Trace(true).ControlURL(u).MustConnect()
 
 	return func(t *testing.T) G {
 		// NOTE: run in Parallel has problem with testing db.
@@ -59,4 +59,29 @@ func serve(g G, db string) *got.Router {
 	serve := server.NewTasksServer(cfg)
 	router.Server.Handler = serve.Router
 	return router
+}
+
+func DeleteTaskOp(g G, p *rod.Page, text string) string {
+	g.Eq(p.MustElement("li").MustText(), text)
+
+	button := `//*[@id="list"]/div[1]/button`
+	go func() {
+		p.MustElementX(button).MustClick()
+	}()
+	wait, handle := p.MustHandleDialog()
+	wait()
+	handle(true, "")
+	p.MustWaitRequestIdle()()
+	return button
+}
+
+func AddNewTaskOp(p *rod.Page, text string) {
+	p.MustElement("#new-task input").MustInput(text)
+	p.MustElement("#new-task button").MustClick()
+	p.MustWaitRequestIdle()()
+}
+
+func AssertElNotExist(g G, p *rod.Page, selector string) {
+	// NOTE: check for button not exist in dom
+	g.Eq(len(p.MustElementsX(selector)), 0)
 }
