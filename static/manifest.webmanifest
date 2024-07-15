@@ -1,0 +1,17 @@
+{
+  "name": "htmx go Todo",
+  "short_name": "todo",
+  "description": "todo app made with htmx tailwind go sqlite",
+  "background_color": "#e2e8f0",
+  "theme_color": "#e2e8f0",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "logo-icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}

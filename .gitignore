@@ -5,3 +5,4 @@ static/style.css
 htmx.js
 coverage.out
 tests/e2e/static
+*.pem

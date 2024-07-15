@@ -4,6 +4,7 @@ import (
 	"alnoor/todo-go-htmx"
 	"alnoor/todo-go-htmx/store"
 	"alnoor/todo-go-htmx/views"
+	"crypto/tls"
 	"log"
 	"net/http"
 	"strconv"
@@ -14,8 +15,9 @@ import (
 )
 
 type Server struct {
-	Store  store.SqliteStore
-	Router *chi.Mux
+	Store     store.SqliteStore
+	Router    *chi.Mux
+	TLSConfig *tls.Config
 }
 
 func NewTasksServer(config todo.Config) Server {
