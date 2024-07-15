@@ -2,7 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [1.12.1] - 2024-07-15
+
+### 🚀 Features
+
+- *(production)* Add mkcert for https. add manifest for pwa
+
+## [1.11.5] - 2024-07-04
+
+### 🚜 Refactor
+
+- *(search)* Clean up search algorithm
+
+### 🧪 Testing
+
+- *(e2e)* Edit and fix e2e tests based on ui changes
+
+## [1.11.4] - 2024-07-02
 
 ### 🐛 Bug Fixes
 
