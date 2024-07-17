@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.0] - 2024-07-17
+
+### 🚀 Features
+
+- *(server)* Add implementation for echo server
+
+### 📚 Documentation
+
+- Changelog
+
 ## [1.12.1] - 2024-07-15
 
 ### 🚀 Features
