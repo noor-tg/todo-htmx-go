@@ -12,6 +12,7 @@
 - [x] counters
   - [x] total tasks
   - [x] completed tasks
+- [x] pwa with https
 
 
 ## Dependances
@@ -19,6 +20,9 @@
 - [tailwindcss](https://tailwindcss.com)
 - [templ](https://templ.guide)
 - go
+  - can use chi implementation
+  - can use echo implementation
+- sqlite as db engine
 
 ## Installation
 - go dependances
@@ -49,6 +53,21 @@ air
 - you may write the name of attributes wrong (i.e ht-post)
 - it is better to use oob than js code with hx events
  
+## TODO
+- [x] refactor using echo framework
+  - [x] install framework
+  - [x] integrate with templ
+  - [x] integrate static assets
+  - [x] refactor handlers
+    - [x] index
+    - [x] create
+    - [x] edit
+    - [x] patch
+    - [x] delete
+    - [x] counters
+  - [x] add integration tests
+  - [x] validate user acceptance tests
+
 ## E2E Tests (with rod)
 - [x] add task
 - [x] remove task

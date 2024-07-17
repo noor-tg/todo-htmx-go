@@ -2,17 +2,17 @@ package main
 
 import (
 	"alnoor/todo-go-htmx"
-	"alnoor/todo-go-htmx/server"
+	server_echo "alnoor/todo-go-htmx/server/echo"
 	"log"
 	"net/http"
 )
 
 const (
-	port = ":443"
+	port = ":3000"
 )
 
 func main() {
-	serve := server.NewTasksServer(todo.ProductionCfg)
+	serve := server_echo.NewTasksServer(todo.ProductionCfg)
 
 	srvr := &http.Server{
 		Addr:    port,
@@ -20,7 +20,7 @@ func main() {
 	}
 
 	log.Println("Starting HTTPS server...")
-	err := srvr.ListenAndServeTLS("./todo.local.pem", "./todo.local-key.pem")
+	err := srvr.ListenAndServeTLS("todo.local.pem", "todo.local-key.pem")
 	if err != nil {
 		log.Fatalf("ListenAndServe: %v\n", err)
 	}

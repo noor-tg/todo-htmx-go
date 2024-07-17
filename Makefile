@@ -12,3 +12,6 @@ live:
 
 build:
 	go build -o tmp/todo cmd/main.go
+
+test:
+	gow -g=richgo -c test -count=1 -v ./...

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -110,29 +109,6 @@ func (s *SqliteStore) GetTasks(filter todo.Task) ([]todo.Task, error) {
 	}
 
 	return tasks, nil
-}
-
-func FilterBy(key string, operator string, filter string, query *string, queryArgs *[]interface{}) {
-	if filter != "" {
-		if !ContainWhere(*query) {
-			*query += " WHERE"
-		} else {
-			*query += " AND"
-		}
-		if operator == "LIKE" {
-			*queryArgs = append(*queryArgs, fmt.Sprintf("%%%s%%", filter))
-		} else {
-			*queryArgs = append(*queryArgs, filter)
-		}
-		*query += fmt.Sprintf(" %s %s ?", key, operator)
-	}
-}
-
-func ContainWhere(query string) bool {
-	if strings.Contains(query, "WHERE") {
-		return true
-	}
-	return false
 }
 
 func (s *SqliteStore) UpdateTask(id int, description string) (todo.Task, error) {
@@ -313,4 +289,41 @@ func (s *SqliteStore) GetTasksCounters() (int, int, error) {
 	}
 
 	return total, completed, nil
+}
+
+func (s *SqliteStore) ToggleAndAnimationData(id int) (todo.Counts, todo.Task, int, error) {
+	// get old task info
+	old, err := s.GetTaskById(id)
+	if err != nil {
+		return todo.Counts{}, todo.Task{}, 0, err
+	}
+
+	// toggle task and get task info
+	task, err := s.ToggleTaskStatus(id)
+
+	if err != nil {
+		return todo.Counts{}, todo.Task{}, 0, err
+	}
+
+	// calc complete increase or decrease
+	encreaseCount := false
+	if old.Status == "مكتمل" && task.Status == "مجدول" {
+		encreaseCount = false
+	}
+	if old.Status == "مجدول" && task.Status == "مكتمل" {
+		encreaseCount = true
+	}
+
+	// get tasks counts
+	total, completed, err := s.GetTasksCounters()
+	counts := todo.Counts{Total: total, Completed: completed}
+	oldCompleted := 0
+	if encreaseCount {
+		oldCompleted = counts.Completed - 1
+	} else {
+		oldCompleted = counts.Completed + 1
+	}
+
+	// return data
+	return counts, task, oldCompleted, nil
 }
