@@ -2,7 +2,7 @@ package main_test
 
 import (
 	"alnoor/todo-go-htmx"
-	"alnoor/todo-go-htmx/server"
+	server "alnoor/todo-go-htmx/server/chi"
 	"fmt"
 	"log"
 	"net/http"

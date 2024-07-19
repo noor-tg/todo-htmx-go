@@ -2,7 +2,7 @@ package e2e_test
 
 import (
 	"alnoor/todo-go-htmx"
-	"alnoor/todo-go-htmx/server"
+	server "alnoor/todo-go-htmx/server/chi"
 	"os"
 	"testing"
 
