@@ -2,7 +2,7 @@ package e2e_test
 
 import (
 	"alnoor/todo-go-htmx"
-	server "alnoor/todo-go-htmx/server/chi"
+	server_chi "alnoor/todo-go-htmx/server/chi"
 	"os"
 	"testing"
 
@@ -56,7 +56,7 @@ func serve(g G, db string) *got.Router {
 	router := g.Serve()
 	cfg := todo.TestCfg
 	cfg.DB = db
-	serve := server.NewTasksServer(cfg)
+	serve := server_chi.NewTasksServer(cfg)
 	router.Server.Handler = serve.Router
 	return router
 }

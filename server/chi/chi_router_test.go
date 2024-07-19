@@ -1,8 +1,8 @@
-package main_test
+package server_chi_test
 
 import (
 	"alnoor/todo-go-htmx"
-	server "alnoor/todo-go-htmx/server/chi"
+	server_chi "alnoor/todo-go-htmx/server/chi"
 	"fmt"
 	"net/http"
 	"testing"
@@ -11,7 +11,7 @@ import (
 )
 
 func TestTasksServer(t *testing.T) {
-	serve := server.NewTasksServer(todo.TestCfg)
+	serve := server_chi.NewTasksServer(todo.TestCfg)
 
 	t.Run("post task and return task element", func(t *testing.T) {
 		task, err, response := PostNewTask(serve)

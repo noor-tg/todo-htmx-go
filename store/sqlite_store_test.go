@@ -44,6 +44,24 @@ func TestSqliteStore(t *testing.T) {
 			t.Errorf("failed insert test: got id %v", task.Id)
 		}
 	})
+	t.Run("insert task fail", func(t *testing.T) {
+		input := todo.Task{
+			Description: "",
+		}
+
+		task, err := sqlStore.InsertTask(input.Description)
+		if err != nil {
+			t.Errorf("failed insert test: %v", err)
+		}
+
+		if input.Description != task.Description {
+			t.Errorf("failed insert test: wanted %v got %v", input.Description, task.Description)
+		}
+
+		if task.Id == 0 {
+			t.Errorf("failed insert test: got id %v", task.Id)
+		}
+	})
 
 	t.Run("get all tasks", func(t *testing.T) {
 
@@ -265,6 +283,50 @@ func TestSqliteStore(t *testing.T) {
 		}
 		if completed != 1 {
 			t.Errorf("count is not correct: got %v, wanted %v", completed, 1)
+		}
+	})
+	t.Run("get animation data for counters", func(t *testing.T) {
+		db := uuid.NewString() + ".db"
+		sqlStore = store.New(db)
+		sqlStore.Open(true)
+		sqlStore.Migrate()
+
+		description := faker.ColorName()
+		task, _ := sqlStore.InsertTask(description)
+		counts, task, oldCompleted, err := sqlStore.ToggleAndAnimationData(task.Id)
+		if err != nil {
+			t.Errorf("error toggle and animate %v", err)
+		}
+		if counts.Completed != 1 {
+			t.Errorf("completed != 1")
+		}
+		if oldCompleted != 0 {
+			t.Errorf("oldCompleted should be 0 is %v", oldCompleted)
+		}
+		if counts.Total != 1 {
+			t.Errorf("Total != 1")
+		}
+		if description != task.Description {
+			t.Errorf("description is not correct sent %v, registered %v", description, task.Description)
+		}
+		counts, task, oldCompleted, err = sqlStore.ToggleAndAnimationData(task.Id)
+		if oldCompleted != 1 {
+			t.Errorf("oldCompleted should be 0 is %v", oldCompleted)
+		}
+		if counts.Completed != 0 {
+			t.Errorf("completed != 0")
+		}
+	})
+
+	t.Run("get animation data for counters", func(t *testing.T) {
+		db := uuid.NewString() + ".db"
+		sqlStore = store.New(db)
+		sqlStore.Open(true)
+		sqlStore.Migrate()
+
+		_, _, _, err := sqlStore.ToggleAndAnimationData(1000)
+		if err == nil {
+			t.Errorf("should throw error %v", err)
 		}
 	})
 }

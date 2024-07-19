@@ -1,8 +1,8 @@
-package main_test
+package server_chi_test
 
 import (
 	"alnoor/todo-go-htmx"
-	server "alnoor/todo-go-htmx/server/chi"
+	server_chi "alnoor/todo-go-htmx/server/chi"
 	"fmt"
 	"log"
 	"net/http"
@@ -16,7 +16,7 @@ import (
 	"github.com/pioz/faker"
 )
 
-func GetTasksList(serve server.Server, querystring string) (error, *httptest.ResponseRecorder) {
+func GetTasksList(serve server_chi.Server, querystring string) (error, *httptest.ResponseRecorder) {
 	request, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/%s", querystring), nil)
 
 	response := httptest.NewRecorder()
@@ -54,7 +54,7 @@ func AssertResponseCode(response *httptest.ResponseRecorder, wanted int, t testi
 	}
 }
 
-func PostNewTask(serve server.Server) (todo.Task, error, *httptest.ResponseRecorder) {
+func PostNewTask(serve server_chi.Server) (todo.Task, error, *httptest.ResponseRecorder) {
 	task := todo.Task{
 		Description: faker.ColorName(),
 	}
@@ -78,7 +78,7 @@ func PostNewTask(serve server.Server) (todo.Task, error, *httptest.ResponseRecor
 	return task, err, response
 }
 
-func PutTask(task todo.Task, serve server.Server) (todo.Task, *httptest.ResponseRecorder, error) {
+func PutTask(task todo.Task, serve server_chi.Server) (todo.Task, *httptest.ResponseRecorder, error) {
 	input := strings.NewReader(fmt.Sprintf("description=%s", task.Description))
 	request, err := http.NewRequest(http.MethodPut, fmt.Sprintf("/tasks/%d", task.Id), input)
 
@@ -94,7 +94,7 @@ func PutTask(task todo.Task, serve server.Server) (todo.Task, *httptest.Response
 	return task, response, err
 }
 
-func ToggleTaskStatus(task todo.Task, serve server.Server) (todo.Task, *httptest.ResponseRecorder, error) {
+func ToggleTaskStatus(task todo.Task, serve server_chi.Server) (todo.Task, *httptest.ResponseRecorder, error) {
 	request, err := http.NewRequest(http.MethodPut, fmt.Sprintf("/tasks/toggle-status/%d", task.Id), nil)
 
 	// NOTE: setting the header is required
@@ -109,7 +109,7 @@ func ToggleTaskStatus(task todo.Task, serve server.Server) (todo.Task, *httptest
 	return task, response, err
 }
 
-func DeleteTask(task todo.Task, serve server.Server) (*httptest.ResponseRecorder, error) {
+func DeleteTask(task todo.Task, serve server_chi.Server) (*httptest.ResponseRecorder, error) {
 	request, err := http.NewRequest(http.MethodDelete, fmt.Sprintf("/tasks/%d", task.Id), nil)
 
 	// NOTE: setting the header is required
@@ -138,7 +138,7 @@ func GetTaskId(response *httptest.ResponseRecorder) int {
 	return 0
 }
 
-func GetUpdateTaskForm(task todo.Task, serve server.Server) (*httptest.ResponseRecorder, error) {
+func GetUpdateTaskForm(task todo.Task, serve server_chi.Server) (*httptest.ResponseRecorder, error) {
 	request, err := http.NewRequest(http.MethodGet, fmt.Sprintf("/tasks/%d", task.Id), nil)
 	response := httptest.NewRecorder()
 

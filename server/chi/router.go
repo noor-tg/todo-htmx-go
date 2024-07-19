@@ -1,4 +1,4 @@
-package server
+package server_chi
 
 import (
 	"alnoor/todo-go-htmx"
