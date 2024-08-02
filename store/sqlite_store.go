@@ -14,21 +14,20 @@ type SqliteStore struct {
 	DB   *sql.DB
 }
 
-func New(path string) SqliteStore {
-	return SqliteStore{Path: path}
-}
-
-func (s *SqliteStore) Open(cleanup bool) error {
+func New(path string, cleanup bool) (SqliteStore, error) {
+	s := SqliteStore{Path: path}
 	if cleanup {
 		os.Remove(s.Path)
 	}
-	db, _ := sql.Open("sqlite3", s.Path)
+	db, err := sql.Open("sqlite3", s.Path)
+	if err != nil {
+		return SqliteStore{}, err
+	}
 	s.DB = db
-
-	return nil
+	return s, nil
 }
 
-func (s *SqliteStore) Migrate() error {
+func (s SqliteStore) Migrate() error {
 	prepared, _ := s.DB.Prepare(`
 		CREATE TABLE IF NOT EXISTS tasks (
 			id INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -42,7 +41,7 @@ func (s *SqliteStore) Migrate() error {
 	return nil
 }
 
-func (s *SqliteStore) InsertTask(description string) (todo.Task, error) {
+func (s SqliteStore) InsertTask(description string) (todo.Task, error) {
 	prepared, _ := s.DB.Prepare(`
 		INSERT INTO tasks (description) VALUES (?)
 	`)
@@ -54,7 +53,7 @@ func (s *SqliteStore) InsertTask(description string) (todo.Task, error) {
 	return out, nil
 }
 
-func (s *SqliteStore) GetTasks(filter todo.Task) ([]todo.Task, error) {
+func (s SqliteStore) GetTasks(filter todo.Task) ([]todo.Task, error) {
 	query := `SELECT * FROM tasks`
 	var queryArgs []interface{}
 
@@ -82,7 +81,7 @@ func (s *SqliteStore) GetTasks(filter todo.Task) ([]todo.Task, error) {
 	return tasks, nil
 }
 
-func (s *SqliteStore) UpdateTask(id int, description string) (todo.Task, error) {
+func (s SqliteStore) UpdateTask(id int, description string) (todo.Task, error) {
 	out, err := s.GetTaskById(id)
 	if err != nil {
 		log.Printf("could not update task: %v", err)
@@ -101,7 +100,7 @@ func (s *SqliteStore) UpdateTask(id int, description string) (todo.Task, error) 
 	return task, nil
 }
 
-func (s *SqliteStore) GetTaskById(id int) (todo.Task, error) {
+func (s SqliteStore) GetTaskById(id int) (todo.Task, error) {
 	single := s.DB.QueryRow("SELECT id, description, status FROM tasks WHERE id = ?", id)
 
 	existing := &todo.Task{}
@@ -115,7 +114,7 @@ func (s *SqliteStore) GetTaskById(id int) (todo.Task, error) {
 	return *existing, nil
 }
 
-func (s *SqliteStore) DeleteTask(id int) error {
+func (s SqliteStore) DeleteTask(id int) error {
 	_, err := s.GetTaskById(id)
 	if err != nil {
 		log.Printf("could not update task: %v", err)
@@ -132,7 +131,7 @@ func (s *SqliteStore) DeleteTask(id int) error {
 	return nil
 }
 
-func (s *SqliteStore) ToggleTaskStatus(id int) (todo.Task, error) {
+func (s SqliteStore) ToggleTaskStatus(id int) (todo.Task, error) {
 	out, err := s.GetTaskById(id)
 	if err != nil {
 		log.Printf("could not update task: %v", err)
@@ -163,7 +162,7 @@ func (s *SqliteStore) ToggleTaskStatus(id int) (todo.Task, error) {
 	return task, nil
 }
 
-func (s *SqliteStore) GetTasksByStatus(status string) ([]todo.Task, error) {
+func (s SqliteStore) GetTasksByStatus(status string) ([]todo.Task, error) {
 	rows, _ := s.DB.Query(`SELECT * FROM tasks WHERE status = ?`, status)
 	defer rows.Close()
 
@@ -180,27 +179,27 @@ func (s *SqliteStore) GetTasksByStatus(status string) ([]todo.Task, error) {
 	return tasks, nil
 }
 
-func (s *SqliteStore) GetTasksCount() (int, error) {
+func (s SqliteStore) GetTasksCount() (int, error) {
 	single := s.DB.QueryRow("SELECT count(*) as count FROM tasks")
 	count := 0
 	single.Scan(&count)
 	return count, nil
 }
 
-func (s *SqliteStore) GetCompletedTasksCount() (int, error) {
+func (s SqliteStore) GetCompletedTasksCount() (int, error) {
 	single := s.DB.QueryRow("SELECT count(*) as count FROM tasks where status = ?", "مكتمل")
 	count := 0
 	single.Scan(&count)
 	return count, nil
 }
 
-func (s *SqliteStore) GetTasksCounters() (int, int, error) {
+func (s SqliteStore) GetTasksCounters() (int, int, error) {
 	total, _ := s.GetTasksCount()
 	completed, _ := s.GetCompletedTasksCount()
 	return total, completed, nil
 }
 
-func (s *SqliteStore) ToggleAndAnimationData(id int) (todo.Counts, todo.Task, int, error) {
+func (s SqliteStore) ToggleAndAnimationData(id int) (todo.Counts, todo.Task, int, error) {
 	// get old task info
 	old, err := s.GetTaskById(id)
 	if err != nil {

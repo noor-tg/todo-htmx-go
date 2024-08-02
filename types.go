@@ -34,3 +34,18 @@ type Counts struct {
 	Total     int
 	Completed int
 }
+
+type Store interface {
+	Migrate() error
+	InsertTask(description string) (Task, error)
+	GetTasks(filter Task) ([]Task, error)
+	UpdateTask(id int, description string) (Task, error)
+	GetTaskById(id int) (Task, error)
+	DeleteTask(id int) error
+	ToggleTaskStatus(id int) (Task, error)
+	GetTasksByStatus(status string) ([]Task, error)
+	GetTasksCount() (int, error)
+	GetCompletedTasksCount() (int, error)
+	GetTasksCounters() (int, int, error)
+	ToggleAndAnimationData(id int) (Counts, Task, int, error)
+}

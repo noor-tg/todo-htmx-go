@@ -17,9 +17,8 @@ type Server struct {
 }
 
 func NewTasksServer(config todo.Config) Server {
-	store := store.New(config.DB)
+	store, _ := store.New(config.DB, config.Cleanup)
 	server := Server{}
-	store.Open(config.Cleanup)
 	store.Migrate()
 	server.Store = store
 

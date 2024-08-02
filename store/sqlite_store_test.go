@@ -10,9 +10,9 @@ import (
 )
 
 func TestSqliteStore(t *testing.T) {
-	sqlStore := store.New("./todo.db")
+	sqlStore, _ := store.New("./todo.db", true)
 	t.Run("connect correctly to db", func(t *testing.T) {
-		err := sqlStore.Open(true)
+		_, err := store.New("./todo.db", true)
 
 		if err != nil {
 			t.Errorf("error in test connect: %v", err)
@@ -223,8 +223,7 @@ func TestSqliteStore(t *testing.T) {
 
 	t.Run("get tasks count", func(t *testing.T) {
 		db := uuid.NewString() + ".db"
-		sqlStore = store.New(db)
-		sqlStore.Open(true)
+		sqlStore, _ = store.New(db, true)
 		sqlStore.Migrate()
 
 		sqlStore.InsertTask(faker.ColorName())
@@ -244,8 +243,7 @@ func TestSqliteStore(t *testing.T) {
 
 	t.Run("get completed tasks count", func(t *testing.T) {
 		db := uuid.NewString() + ".db"
-		sqlStore = store.New(db)
-		sqlStore.Open(true)
+		sqlStore, _ = store.New(db, true)
 		sqlStore.Migrate()
 
 		sqlStore.InsertTask(faker.ColorName())
@@ -264,8 +262,7 @@ func TestSqliteStore(t *testing.T) {
 	})
 	t.Run("get tasks counters: total , completed", func(t *testing.T) {
 		db := uuid.NewString() + ".db"
-		sqlStore = store.New(db)
-		sqlStore.Open(true)
+		sqlStore, _ = store.New(db, true)
 		sqlStore.Migrate()
 
 		sqlStore.InsertTask(faker.ColorName())
@@ -287,8 +284,7 @@ func TestSqliteStore(t *testing.T) {
 	})
 	t.Run("get animation data for counters", func(t *testing.T) {
 		db := uuid.NewString() + ".db"
-		sqlStore = store.New(db)
-		sqlStore.Open(true)
+		sqlStore, _ = store.New(db, true)
 		sqlStore.Migrate()
 
 		description := faker.ColorName()
@@ -320,8 +316,7 @@ func TestSqliteStore(t *testing.T) {
 
 	t.Run("get animation data for counters", func(t *testing.T) {
 		db := uuid.NewString() + ".db"
-		sqlStore = store.New(db)
-		sqlStore.Open(true)
+		sqlStore, _ = store.New(db, true)
 		sqlStore.Migrate()
 
 		_, _, _, err := sqlStore.ToggleAndAnimationData(1000)

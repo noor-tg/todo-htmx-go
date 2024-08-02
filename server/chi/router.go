@@ -15,16 +15,15 @@ import (
 )
 
 type Server struct {
-	Store     store.SqliteStore
+	Store     todo.Store
 	Router    *chi.Mux
 	TLSConfig *tls.Config
 }
 
 func NewTasksServer(config todo.Config) Server {
-	store := store.New(config.DB)
-	server := Server{}
-	store.Open(config.Cleanup)
+	store, _ := store.New(config.DB, config.Cleanup)
 	store.Migrate()
+	server := Server{}
 	server.Store = store
 
 	r := chi.NewRouter()
