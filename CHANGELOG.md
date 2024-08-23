@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.13.1] - 2024-08-23
+
+### 🐛 Bug Fixes
+
+- *(chi, store)* Move tests to chi package. fix package name. cleanup sqlite store
+
+### 🚜 Refactor
+
+- *(server)* Move default server to chi directory
+- *(store)* Use generic Store interface to use with servers
+- *(server)* Static files middleware. add docs to make ssl certs
+
+### 📚 Documentation
+
+- Add todos about auth system
+
 ## [1.13.0] - 2024-07-17
 
 ### 🚀 Features
@@ -11,6 +27,7 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Changelog
+- Add changelog
 
 ## [1.12.1] - 2024-07-15
 
