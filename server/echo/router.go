@@ -11,7 +11,7 @@ import (
 )
 
 type Server struct {
-	Store     store.SqliteStore
+	Store     todo.Store
 	Router    *echo.Echo
 	TLSConfig *tls.Config
 }
@@ -29,10 +29,10 @@ func NewTasksServer(config todo.Config) Server {
 	}
 
 	e.Use(middleware.Recover())
-
-	// import embedded directory with http.FS
-	assetHandler := http.FileServer(http.FS(todo.Static))
-	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("", assetHandler)))
+	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
+		Root:       "", // because files are located in 'root' directory in `static` fs
+		Filesystem: http.FS(todo.Static),
+	}))
 
 	e.GET("/", server.IndexHandler)
 	e.POST("/tasks", server.PostTaskHandler)

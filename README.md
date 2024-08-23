@@ -19,10 +19,11 @@
 - [htmx](https://htmx.org) (already installed in static directory)
 - [tailwindcss](https://tailwindcss.com)
 - [templ](https://templ.guide)
-- go
+- `go`
   - can use chi implementation
   - can use echo implementation
-- sqlite as db engine
+- `sqlite` as db engine
+- [mkcert](https://github.com/FiloSottile/mkcert) setup ssl cert for development and test pwa
 
 ## Installation
 - go dependances
@@ -32,7 +33,7 @@ go mod tidy
 
 - tailwind
   - download [tailwind cli](https://github.com/tailwindlabs/tailwindcss/releases)
-  - add to path
+  - add to system path
 
 - install air
 ```bash
@@ -40,6 +41,12 @@ go install github.com/cosmtrek/air@latest
 ```
 
 - install `make`
+- install `mkcert` from releases page
+- run
+```
+  mkcert -install
+  mkcert todo.local
+```
 
 ## Run
 ```bash
