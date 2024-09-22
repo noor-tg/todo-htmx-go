@@ -7,6 +7,9 @@ import "embed"
 //go:embed static
 var Static embed.FS
 
+//go:embed certs
+var Certs embed.FS
+
 type Task struct {
 	Id          int
 	Description string
