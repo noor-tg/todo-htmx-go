@@ -8,6 +8,15 @@ All notable changes to this project will be documented in this file.
 
 - *(deploy)* Allow to embed https cert in app binary
 
+### 🚜 Refactor
+
+- Change package name to equal to github url
+
+### ⚙️ Miscellaneous Tasks
+
+- Add change log
+- Embed testing certs for https
+
 ## [1.13.1] - 2024-08-23
 
 ### 🐛 Bug Fixes
