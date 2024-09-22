@@ -1,13 +1,13 @@
 package server_echo
 
 import (
-	"alnoor/todo-go-htmx"
-	"alnoor/todo-go-htmx/store"
 	"crypto/tls"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/noor-tg/todo-htmx-go"
+	"github.com/noor-tg/todo-htmx-go/store"
 )
 
 type Server struct {

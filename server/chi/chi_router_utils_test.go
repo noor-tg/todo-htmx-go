@@ -1,8 +1,6 @@
 package server_chi_test
 
 import (
-	"alnoor/todo-go-htmx"
-	server_chi "alnoor/todo-go-htmx/server/chi"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,6 +11,8 @@ import (
 	"testing"
 
 	"github.com/a-h/templ"
+	"github.com/noor-tg/todo-htmx-go"
+	server_chi "github.com/noor-tg/todo-htmx-go/server/chi"
 	"github.com/pioz/faker"
 )
 

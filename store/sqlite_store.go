@@ -1,12 +1,12 @@
 package store
 
 import (
-	"alnoor/todo-go-htmx"
 	"database/sql"
 	"log"
 	"os"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/noor-tg/todo-htmx-go"
 )
 
 type SqliteStore struct {

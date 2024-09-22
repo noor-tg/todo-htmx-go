@@ -1,11 +1,11 @@
 package store_test
 
 import (
-	"alnoor/todo-go-htmx"
-	"alnoor/todo-go-htmx/store"
 	"testing"
 
 	"github.com/google/uuid"
+	"github.com/noor-tg/todo-htmx-go"
+	"github.com/noor-tg/todo-htmx-go/store"
 	"github.com/pioz/faker"
 )
 

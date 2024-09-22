@@ -1,14 +1,14 @@
 package e2e_test
 
 import (
-	"alnoor/todo-go-htmx"
-	server_chi "alnoor/todo-go-htmx/server/chi"
 	"os"
 	"testing"
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
 	"github.com/google/uuid"
+	"github.com/noor-tg/todo-htmx-go"
+	server_chi "github.com/noor-tg/todo-htmx-go/server/chi"
 	"github.com/ysmood/got"
 )
 

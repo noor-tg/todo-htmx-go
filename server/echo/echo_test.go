@@ -1,13 +1,13 @@
 package server_echo_test
 
 import (
-	"alnoor/todo-go-htmx"
-	server_echo "alnoor/todo-go-htmx/server/echo"
 	"fmt"
 	"net/http"
 	"testing"
 
 	"github.com/a-h/templ"
+	"github.com/noor-tg/todo-htmx-go"
+	server_echo "github.com/noor-tg/todo-htmx-go/server/echo"
 )
 
 func TestTasksServer(t *testing.T) {

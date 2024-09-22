@@ -1,19 +1,19 @@
 package main
 
 import (
-	"alnoor/todo-go-htmx"
-	server_echo "alnoor/todo-go-htmx/server/echo"
 	"crypto/tls"
 	"log"
 	"net/http"
+
+	"github.com/noor-tg/todo-htmx-go"
+	server_echo "github.com/noor-tg/todo-htmx-go/server/echo"
 )
 
 const (
 	port = ":3000"
 )
 
-func main() {
-	serve := server_echo.NewTasksServer(todo.ProductionCfg)
+func https() *tls.Config {
 	// Read the embedded certificate and key
 	certData, err := todo.Certs.ReadFile("certs/cert.pem")
 	if err != nil {
@@ -35,6 +35,15 @@ func main() {
 		Certificates: []tls.Certificate{cert},
 	}
 
+	return tlsConfig
+
+}
+
+func main() {
+	serve := server_echo.NewTasksServer(todo.ProductionCfg)
+
+	tlsConfig := https()
+
 	srvr := &http.Server{
 		Addr:      port,
 		Handler:   serve.Router,
@@ -42,8 +51,8 @@ func main() {
 	}
 
 	log.Println("Starting HTTPS server... https://todo.local:3000")
-	err = srvr.ListenAndServeTLS("", "")
-	if err != nil {
+
+	if err := srvr.ListenAndServeTLS("", ""); err != nil {
 		log.Fatalf("ListenAndServe: %v\n", err)
 	}
 }

@@ -1,9 +1,6 @@
 package server_chi
 
 import (
-	"alnoor/todo-go-htmx"
-	"alnoor/todo-go-htmx/store"
-	"alnoor/todo-go-htmx/views"
 	"crypto/tls"
 	"log"
 	"net/http"
@@ -12,6 +9,9 @@ import (
 	"github.com/a-h/templ"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/noor-tg/todo-htmx-go"
+	"github.com/noor-tg/todo-htmx-go/store"
+	"github.com/noor-tg/todo-htmx-go/views"
 )
 
 type Server struct {

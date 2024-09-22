@@ -1,4 +1,4 @@
-module alnoor/todo-go-htmx
+module github.com/noor-tg/todo-htmx-go
 
 go 1.22.2
 

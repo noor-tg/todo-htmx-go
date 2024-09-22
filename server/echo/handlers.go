@@ -1,14 +1,14 @@
 package server_echo
 
 import (
-	"alnoor/todo-go-htmx"
-	"alnoor/todo-go-htmx/views"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/a-h/templ"
 	"github.com/labstack/echo/v4"
+	"github.com/noor-tg/todo-htmx-go"
+	"github.com/noor-tg/todo-htmx-go/views"
 )
 
 func (s *Server) IndexHandler(c echo.Context) error {
