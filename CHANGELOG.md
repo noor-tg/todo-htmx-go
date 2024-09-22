@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.14.0] - 2024-09-22
+
+### 🚀 Features
+
+- *(deploy)* Allow to embed https cert in app binary
+
 ## [1.13.1] - 2024-08-23
 
 ### 🐛 Bug Fixes
@@ -17,6 +23,7 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Add todos about auth system
+- Add changelog
 
 ## [1.13.0] - 2024-07-17
 
