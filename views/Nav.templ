@@ -7,25 +7,20 @@ templ Nav(activeStatus string) {
 		hx-trigger="input"
 		hx-get="/"
 		hx-push-url="true"
-		class="grid grid-flow-row lg:grid-cols-[150px_auto_180px] grid-cols-[140px_auto] grid-rows-2 lg:grid-rows-1 mb-2 gap-2"
+		class="mb-2 grid grid-flow-row grid-cols-[140px_auto] grid-rows-2 gap-2 lg:grid-cols-[150px_auto_180px] lg:grid-rows-1"
 		hx-params="description, status"
 	>
-		<div class="inline-flex flex-row justify-start lg:ps-2 gap-1 p-1 md:p-2 items-center bg-white text-sky-600 rounded-full self-center row-start-1">
+		<div class="row-start-1 inline-flex flex-row items-center justify-start gap-1 self-center rounded-full bg-white p-1 text-sky-600 md:p-2 lg:ps-2">
 			<img src="/static/logo.svg" class="size-10"/>
-			<h1 class="font-bold text-3xl leading-normal">مهام</h1>
+			<h1 class="text-3xl font-bold leading-normal">مهام</h1>
 		</div>
 		<input
-			class="focus:outline-none 
-						ring focus:ring-slate-200 ring-inset ring-slate-300 
-						rounded-lg text-slate-900 
-						px-4 py-2 self-center row-start-2 col-span-2
-						lg:row-start-1 
-						"
+			class="col-span-2 row-start-2 self-center rounded-lg px-4 py-2 text-slate-900 ring ring-inset ring-slate-300 focus:outline-none focus:ring-slate-200 lg:row-start-1"
 			name="description"
 			type="search"
 			placeholder="بحث"
 		/>
-		<div class="inline-flex flex-row justify-around items-center rounded-lg text-white justify-self-stretch self-center row-start-1">
+		<div class="row-start-1 inline-flex flex-row items-center justify-around self-center justify-self-stretch rounded-lg text-white">
 			@StatusLink("الكل", activeStatus)
 			@StatusLink("مكتمل", activeStatus)
 			@StatusLink("مجدول", activeStatus)

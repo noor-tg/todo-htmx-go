@@ -1,17 +1,16 @@
 package views
 
-import "github.com/noor-tg/todo-htmx-go"
-import "fmt"
+import (
+	"fmt"
+	"github.com/noor-tg/todo-htmx-go"
+)
 
 templ Task(task todo.Task) {
 	<div
-		class="rounded-lg bg-slate-100 
-		p-4
-		grid grid-rows-[auto_30px] lg:grid-rows-1 grid-cols-2 lg:grid-cols-[auto_50px_50px] gap-4 lg:content-center lg:items-center
-		items-end"
+		class="grid grid-cols-2 grid-rows-[auto_30px] items-end gap-4 rounded-lg bg-slate-100 p-4 lg:grid-cols-[auto_50px_50px] lg:grid-rows-1 lg:content-center lg:items-center"
 	>
 		<li
-			class="cursor-pointer row-start-1"
+			class="row-start-1 cursor-pointer"
 			hx-trigger="click"
 			hx-get={ fmt.Sprintf("/tasks/%d", task.Id) }
 			hx-swap="outerHTML"
@@ -21,17 +20,14 @@ templ Task(task todo.Task) {
 			hx-put={ fmt.Sprintf("/tasks/toggle-status/%d", task.Id) }
 			hx-swap="outerHTML"
 			hx-target="closest div"
-			class="size-6
-				row-start-2 col-span-1 lg:row-start-1 self-end lg:self-center"
+			class="col-span-1 row-start-2 size-6 self-end lg:row-start-1 lg:self-center"
 			if task.Status == "مكتمل" {
 				checked="checked"
 			}
 		/>
 		<button
 			type="button"
-			class="justify-self-end row-start-2 col-span-1 lg:row-start-1 self-end lg:self-center
-						 hover:bg-red-50 text-red-300 leading-none 
-						ring-inset ring-2 ring-red-300 font-bold size-7 gl:size-6 text-normal rounded-lg"
+			class="gl:size-6 text-normal col-span-1 row-start-2 size-7 self-end justify-self-end rounded-lg font-bold leading-none text-red-300 ring-2 ring-inset ring-red-300 hover:bg-red-50 lg:row-start-1 lg:self-center"
 			hx-delete={ fmt.Sprintf("/tasks/%d", task.Id) }
 			hx-confirm="هل تريد حذف المهمة ?"
 			hx-swap="outerHTML"

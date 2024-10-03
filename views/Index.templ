@@ -12,7 +12,7 @@ templ Index(activeStatus string, tasks []todo.Task, counts todo.Counts) {
 }
 
 templ Tasks(tasks []todo.Task) {
-	<ul class="h-4/6 flex flex-col gap-2 overflow-y-auto pl-1 pb-10 scrollbar-gutter" id="list">
+	<ul class="scrollbar-gutter flex h-4/6 flex-col gap-2 overflow-y-auto pb-10 pl-1" id="list">
 		for _, task := range tasks {
 			@Task(task)
 		}

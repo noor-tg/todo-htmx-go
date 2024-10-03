@@ -6,7 +6,7 @@ templ InputForm(OOB bool, err string) {
 		hx-target="#list"
 		hx-swap="afterbegin"
 		id="new-task"
-		class="flex flex-col lg:flex-row lg:justify-between lg:items-center items-start gap-1 w-full"
+		class="flex w-full flex-col items-start gap-1 lg:flex-row lg:items-center lg:justify-between"
 		if OOB {
 			hx-swap-oob="true"
 		}
@@ -15,11 +15,7 @@ templ InputForm(OOB bool, err string) {
 			<input
 				name="description"
 				placeholder="مهمة جديدة"
-				class="flex-1 ring-4 ring-slate-400 w-full
-							 p-3 rounded-lg focus:outline-none 
-							 focus:ring-slate-600
-							ring-inset my-2
-							"
+				class="my-2 w-full flex-1 rounded-lg p-3 ring-4 ring-inset ring-slate-400 focus:outline-none focus:ring-slate-600"
 			/>
 			if len(err) > 0 {
 				<span class="text-sm text-red-500">{ err }</span>
