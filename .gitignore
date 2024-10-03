@@ -1,9 +1,10 @@
 tmp
-views/*_templ.go
 static/style.css
 **/*.db
+views/*_templ.go
 htmx.js
 coverage.out
 tests/e2e/static
 ./*.pem
 cover.txt
+node_modules/
