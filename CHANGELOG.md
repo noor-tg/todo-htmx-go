@@ -2,7 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.14.0] - 2024-09-22
+## [1.14.2] - 2024-10-03
+
+### 🎨 Styling
+
+- Config tailwind, prettier to order classes by prettier-tailwind sort plugin
+- Apply class sort to views files
+
+### ⚙️ Miscellaneous Tasks
+
+- Update go packages. reconfigure air and makefile
+
+## [1.14.1] - 2024-09-22
 
 ### 🚀 Features
 
