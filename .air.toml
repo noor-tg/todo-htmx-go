@@ -5,7 +5,7 @@ tmp_dir = "tmp"
 [build]
   args_bin = []
   bin = "./tmp/todo-dev"
-  cmd = "make live"
+  cmd = "just live"
   delay = 500
   exclude_dir = ["tmp", "vendor", "testdata"]
   exclude_file = []
@@ -47,6 +47,6 @@ tmp_dir = "tmp"
 
 [proxy]
   enabled = true
-  proxy_port = 8888
+  proxy_port = 7007
   app_port = 3000
   https = true
